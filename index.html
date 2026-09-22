@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小型船舶操縦士 試験対策 | Boat License Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wave-bg" aria-hidden="true">
+  <svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,40 C240,90 480,0 720,40 C960,80 1200,10 1440,50 L1440,120 L0,120 Z"></path></svg>
+</div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-icon">⚓</span>
+    <span class="brand-text" data-i18n="brandText">小型船舶操縦士 試験トレーナー</span>
+  </div>
+  <button id="langToggle" class="lang-toggle" type="button">EN</button>
+</header>
+
+<main id="app">
+
+  <!-- ============ TOP SCREEN ============ -->
+  <section id="screen-top" class="screen active">
+    <div class="hero-card">
+      <img src="images/topimage.png" alt="Boat exam" class="hero-img">
+      <h1 data-i18n="heroTitle">船舶免許 学科試験 練習アプリ</h1>
+      <p class="hero-sub" data-i18n="heroSub">ランダム出題・弱点優先・日英対応のミニ模試</p>
+    </div>
+
+    <div class="panel">
+      <h2 class="panel-title"><span data-i18n="chooseTime">試験時間を選んでください</span></h2>
+      <div class="duration-grid" id="durationGrid">
+        <button class="duration-btn" data-minutes="5" type="button">
+          <span class="d-num">5</span><span class="d-unit" data-i18n="minutes">分</span>
+        </button>
+        <button class="duration-btn" data-minutes="10" type="button">
+          <span class="d-num">10</span><span class="d-unit" data-i18n="minutes">分</span>
+        </button>
+        <button class="duration-btn" data-minutes="15" type="button">
+          <span class="d-num">15</span><span class="d-unit" data-i18n="minutes">分</span>
+        </button>
+        <button class="duration-btn" data-minutes="30" type="button">
+          <span class="d-num">30</span><span class="d-unit" data-i18n="minutes">分</span>
+        </button>
+        <button class="duration-btn mock" data-minutes="mock" type="button">
+          <span class="d-num">模試</span><span class="d-unit" data-i18n="mockSub">70分・50問</span>
+        </button>
+      </div>
+      <p class="mock-note" data-i18n="mockNote">※「模試」は実際の小型船舶操縦士学科試験に合わせた時間・問題数の模擬試験です(目安)。</p>
+
+      <div class="stats-row" id="statsRow"></div>
+
+      <button id="startBtn" class="start-btn" type="button" disabled data-i18n="selectFirst">上の時間を選択してください</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <section id="screen-quiz" class="screen">
+    <div class="quiz-hud">
+      <div class="hud-item">
+        <span class="hud-label" data-i18n="timeLeft">残り時間</span>
+        <span id="timeLeft" class="hud-value">--:--</span>
+      </div>
+      <div class="hud-bar-wrap"><div id="timeBar" class="hud-bar"></div></div>
+      <div class="hud-item">
+        <span class="hud-label" data-i18n="question">問題</span>
+        <span id="qCounter" class="hud-value">1</span>
+      </div>
+      <div class="hud-item score-item">
+        <span class="hud-label" data-i18n="correctLabel">正解</span>
+        <span id="qScore" class="hud-value">0</span>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <div class="cat-tag" id="catTag"></div>
+      <p id="qText" class="q-text"></p>
+      <div id="choicesWrap" class="choices-wrap"></div>
+
+      <div id="feedback" class="feedback"></div>
+      <button id="nextBtn" class="next-btn" type="button">
+        <span data-i18n="next">次の問題へ</span> →
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <section id="screen-result" class="screen">
+    <div class="panel result-panel">
+      <div class="anchor-badge">⚓</div>
+      <h2 id="passRateHeading" class="result-heading"></h2>
+      <div class="rate-circle-wrap">
+        <svg viewBox="0 0 120 120" class="rate-circle">
+          <circle cx="60" cy="60" r="52" class="rate-bg"></circle>
+          <circle id="rateArc" cx="60" cy="60" r="52" class="rate-arc"></circle>
+        </svg>
+        <div class="rate-num"><span id="rateNum">0</span>%</div>
+      </div>
+      <p id="resultSummary" class="result-summary"></p>
+
+      <div class="cat-breakdown" id="catBreakdown"></div>
+
+      <div class="weak-list-wrap">
+        <h3 data-i18n="reviewTitle">見直しポイント</h3>
+        <div id="weakList" class="weak-list"></div>
+      </div>
+
+      <div class="result-btns">
+        <button id="retryBtn" class="start-btn" type="button" data-i18n="backToTop">トップへ戻る</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot-note" data-i18n="footNote">本アプリは自主学習用の非公式教材です。最新の法令・試験情報は必ず公式情報でご確認ください。</footer>
+
+<script src="i18n.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
