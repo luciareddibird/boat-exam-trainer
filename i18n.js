@@ -30,7 +30,19 @@ window.I18N = {
     timeUp: "時間切れです！",
     weakNone: "間違えた問題はありませんでした。素晴らしい！",
     passRefNote: "※合格ラインの目安：総合65%以上（参考値・非公式）",
-    langBtnLabel: "EN"
+    langBtnLabel: "EN",
+    voiceModeLabel: "音声モード（ながらトレーニング）",
+    voiceModeDesc: "問題と選択肢を読み上げ、声で回答できます。作業しながらでも耳だけで練習できます。",
+    voiceUnsupported: "このブラウザは音声認識に対応していません（Chrome/Edge推奨）。読み上げのみ利用できます。",
+    voiceListening: "🎤 聞いています…（A/B/C/D または 1〜4 と言ってください）",
+    voiceSpeaking: "🔊 読み上げ中…",
+    voiceIdle: "音声モード ON",
+    voiceMicBtn: "🎤 もう一度聞く",
+    voiceMuteBtn: "🔇 音声を止める",
+    voiceUnmuteBtn: "🔊 音声を再開",
+    voiceNotHeard: "聞き取れませんでした。もう一度お答えください、またはボタンをタップしてください。",
+    voiceAdvancing: "次の問題へ進みます…",
+    voiceResultsReady: "結果を確認しましょう。"
   },
   en: {
     brandText: "Boat License Exam Trainer",
@@ -62,6 +74,18 @@ window.I18N = {
     timeUp: "Time's up!",
     weakNone: "No missed questions — great job!",
     passRefNote: "* Approx. passing reference: 65%+ overall (unofficial guideline)",
-    langBtnLabel: "JP"
+    langBtnLabel: "JP",
+    voiceModeLabel: "Voice Mode (hands-free training)",
+    voiceModeDesc: "Questions and choices are read aloud, and you can answer by voice — practice with just your ears while you work.",
+    voiceUnsupported: "This browser doesn't support voice recognition (Chrome/Edge recommended). Read-aloud only will be used.",
+    voiceListening: "🎤 Listening… (say A/B/C/D or 1–4)",
+    voiceSpeaking: "🔊 Speaking…",
+    voiceIdle: "Voice Mode ON",
+    voiceMicBtn: "🎤 Listen again",
+    voiceMuteBtn: "🔇 Mute voice",
+    voiceUnmuteBtn: "🔊 Unmute voice",
+    voiceNotHeard: "Didn't catch that. Please answer again, or tap a choice.",
+    voiceAdvancing: "Moving to the next question…",
+    voiceResultsReady: "Let's check your results."
   }
 };

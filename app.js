@@ -18,7 +18,9 @@ const state = {
   lang: "jp",
   selectedMinutes: null, // number or "mock"
   screen: "top",
-  session: null
+  session: null,
+  voiceMode: false,
+  voiceMuted: false
 };
 
 const QUESTIONS = window.QUESTIONS;
@@ -184,6 +186,7 @@ function loadQuestionAt(index){
   s.index = index;
   s.current = { id: s.queue[index], answered:false, chosenIndex:null };
   renderQuiz();
+  maybeSpeakQuestion();
 }
 
 function renderQuiz(){
@@ -242,6 +245,7 @@ function escapeHtml(str){
 function onChoiceClick(idx, btnEl){
   const s = state.session;
   if(s.current.answered) return;
+  stopListening();
   const q = QMAP[s.current.id];
   const correct = idx === q.answer;
 
@@ -261,6 +265,18 @@ function onChoiceClick(idx, btnEl){
   const isLast = s.isMock && (s.index+1 >= s.queue.length);
   nextBtn.querySelector("span").textContent = isLast ? t("finish") : t("next");
   nextBtn.classList.add("show");
+
+  maybeSpeakFeedback(q, correct, isLast);
+}
+
+function goToNextQuestion(){
+  const s = state.session;
+  if(!s || s.ended) return;
+  if(s.isMock && s.index+1 >= s.queue.length){
+    finishSession();
+    return;
+  }
+  loadQuestionAt(s.index+1);
 }
 
 function lockChoices(q, chosenIndex){
@@ -284,12 +300,8 @@ function showFeedback(q, correct){
 }
 
 nextBtn.addEventListener("click", ()=>{
-  const s = state.session;
-  if(s.isMock && s.index+1 >= s.queue.length){
-    finishSession();
-    return;
-  }
-  loadQuestionAt(s.index+1);
+  stopVoice();
+  goToNextQuestion();
 });
 
 function finishSession(){
@@ -297,6 +309,7 @@ function finishSession(){
   if(s.ended) return;
   s.ended = true;
   if(s.timerId) clearInterval(s.timerId);
+  stopVoice();
   showScreen("result");
   renderResult();
 }
@@ -427,6 +440,7 @@ function renderResult(){
 }
 
 retryBtn.addEventListener("click", ()=>{
+  stopVoice();
   state.selectedMinutes = null;
   document.querySelectorAll(".duration-btn").forEach(b=>b.classList.remove("selected"));
   startBtn.disabled = true;
@@ -437,11 +451,14 @@ retryBtn.addEventListener("click", ()=>{
 
 /* ================= LANGUAGE TOGGLE ================= */
 document.getElementById("langToggle").addEventListener("click", ()=>{
+  stopVoice();
   state.lang = state.lang === "jp" ? "en" : "jp";
   applyStaticI18n();
+  updateVoiceToggleUI();
   renderTopStats();
   if(state.screen === "quiz" && state.session){
     renderQuiz();
+    if(state.session.current && !state.session.current.answered) maybeSpeakQuestion();
   }else if(state.screen === "result" && state.session){
     renderResult();
   }
@@ -450,8 +467,245 @@ document.getElementById("langToggle").addEventListener("click", ()=>{
   }
 });
 
+/* ================= VOICE MODE ================= */
+const voiceModeToggle = document.getElementById("voiceModeToggle");
+const voiceUnsupportedNote = document.getElementById("voiceUnsupportedNote");
+const voiceStatusBar = document.getElementById("voiceStatusBar");
+const voiceStatusText = document.getElementById("voiceStatusText");
+const voiceMicBtn = document.getElementById("voiceMicBtn");
+const voiceMuteBtn = document.getElementById("voiceMuteBtn");
+
+const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+const synthAvailable = "speechSynthesis" in window;
+const recognitionAvailable = !!SpeechRecognitionCtor;
+
+let recognizer = null;
+let recognizerActive = false;
+let retriedListen = false;
+
+const VOICE_KEYWORDS = {
+  jp: [
+    ["a","エー","えー","1","いち","①"],
+    ["b","ビー","びー","2","に","②"],
+    ["c","シー","しー","3","さん","③"],
+    ["d","ディー","でぃー","4","よん","し","④"]
+  ],
+  en: [
+    ["a","1","one"],
+    ["b","2","two"],
+    ["c","3","three"],
+    ["d","4","four"]
+  ]
+};
+
+function speechLang(){ return state.lang === "jp" ? "ja-JP" : "en-US"; }
+
+function updateVoiceToggleUI(){
+  voiceModeToggle.classList.toggle("on", state.voiceMode);
+  voiceModeToggle.setAttribute("aria-pressed", state.voiceMode ? "true" : "false");
+}
+
+function setVoiceStatus(text, listening){
+  voiceStatusText.textContent = text;
+  voiceStatusBar.classList.toggle("listening", !!listening);
+}
+
+if(!synthAvailable){
+  voiceModeToggle.hidden = true;
+}else if(!recognitionAvailable){
+  voiceUnsupportedNote.hidden = false;
+}
+
+voiceModeToggle.addEventListener("click", ()=>{
+  state.voiceMode = !state.voiceMode;
+  updateVoiceToggleUI();
+  if(!state.voiceMode) stopVoice();
+});
+
+voiceMicBtn.addEventListener("click", ()=>{
+  const s = state.session;
+  if(!s || !s.current || s.current.answered) return;
+  retriedListen = false;
+  startListening();
+});
+
+voiceMuteBtn.addEventListener("click", ()=>{
+  state.voiceMuted = !state.voiceMuted;
+  voiceMuteBtn.setAttribute("data-i18n", state.voiceMuted ? "voiceUnmuteBtn" : "voiceMuteBtn");
+  voiceMuteBtn.textContent = state.voiceMuted ? t("voiceUnmuteBtn") : t("voiceMuteBtn");
+  if(state.voiceMuted){
+    stopSpeaking();
+    stopListening();
+    setVoiceStatus(t("voiceIdle"), false);
+  }else if(state.session && state.session.current && !state.session.current.answered){
+    maybeSpeakQuestion();
+  }
+});
+
+function speak(text, onEnd){
+  if(!synthAvailable || state.voiceMuted || !state.voiceMode){
+    if(onEnd) onEnd();
+    return;
+  }
+  try{
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = speechLang();
+    utter.rate = 1.0;
+    utter.onend = ()=>{ if(onEnd) onEnd(); };
+    utter.onerror = ()=>{ if(onEnd) onEnd(); };
+    window.speechSynthesis.speak(utter);
+  }catch(e){
+    if(onEnd) onEnd();
+  }
+}
+
+function stopSpeaking(){
+  if(synthAvailable){
+    try{ window.speechSynthesis.cancel(); }catch(e){/* ignore */}
+  }
+}
+
+function stopListening(){
+  if(recognizer && recognizerActive){
+    try{ recognizer.abort(); }catch(e){/* ignore */}
+  }
+  recognizerActive = false;
+}
+
+function stopVoice(){
+  stopSpeaking();
+  stopListening();
+  voiceStatusBar.hidden = true;
+}
+
+function matchChoiceFromTranscript(raw){
+  const text = raw.toLowerCase().replace(/[.,。、！？!?\s]/g,"");
+  const keywordSets = VOICE_KEYWORDS[state.lang];
+  for(let i=0;i<keywordSets.length;i++){
+    for(const kw of keywordSets[i]){
+      const k = kw.toLowerCase();
+      if(state.lang === "en"){
+        if(text === k) return i;
+      }else{
+        if(text.includes(k)) return i;
+      }
+    }
+  }
+  return -1;
+}
+
+function startListening(){
+  const s = state.session;
+  if(!recognitionAvailable || !state.voiceMode || state.voiceMuted) return;
+  if(!s || !s.current || s.current.answered) return;
+
+  stopListening();
+  recognizer = new SpeechRecognitionCtor();
+  recognizer.lang = speechLang();
+  recognizer.continuous = false;
+  recognizer.interimResults = false;
+  recognizer.maxAlternatives = 4;
+
+  recognizer.onresult = (event)=>{
+    const s2 = state.session;
+    if(!s2 || !s2.current || s2.current.answered) return;
+    const results = event.results[0];
+    let matched = -1;
+    for(let i=0;i<results.length;i++){
+      matched = matchChoiceFromTranscript(results[i].transcript);
+      if(matched !== -1) break;
+    }
+    if(matched !== -1){
+      retriedListen = false;
+      const btns = choicesWrapEl.querySelectorAll(".choice-btn");
+      if(btns[matched]) onChoiceClick(matched, btns[matched]);
+    }else{
+      handleNotHeard();
+    }
+  };
+  recognizer.onerror = ()=>{
+    recognizerActive = false;
+    const s2 = state.session;
+    if(s2 && s2.current && !s2.current.answered) handleNotHeard();
+  };
+  recognizer.onend = ()=>{
+    recognizerActive = false;
+  };
+
+  try{
+    recognizer.start();
+    recognizerActive = true;
+    voiceStatusBar.hidden = false;
+    setVoiceStatus(t("voiceListening"), true);
+  }catch(e){
+    recognizerActive = false;
+  }
+}
+
+function handleNotHeard(){
+  const s = state.session;
+  if(!s || !s.current || s.current.answered) return;
+  if(retriedListen){
+    retriedListen = false;
+    voiceStatusBar.hidden = false;
+    setVoiceStatus(t("voiceNotHeard"), false);
+    speak(t("voiceNotHeard"));
+    return;
+  }
+  retriedListen = true;
+  startListening();
+}
+
+function maybeSpeakQuestion(){
+  if(!state.voiceMode || state.voiceMuted || !synthAvailable) return;
+  const s = state.session;
+  if(!s || !s.current) return;
+  const q = QMAP[s.current.id];
+  const L = q[state.lang];
+  retriedListen = false;
+
+  voiceStatusBar.hidden = false;
+  setVoiceStatus(t("voiceSpeaking"), false);
+
+  const marks = ["A","B","C","D"];
+  const parts = [L.q.replace(/\n/g," ")];
+  L.choices.forEach((c,i)=>parts.push(`${marks[i]}. ${c}`));
+  const text = parts.join(state.lang==="jp" ? "。 " : ". ");
+
+  speak(text, ()=>{
+    const s2 = state.session;
+    if(!s2 || !s2.current || s2.current.answered) return;
+    if(recognitionAvailable){
+      startListening();
+    }else{
+      setVoiceStatus(state.lang==="jp" ? "選択肢をタップして回答してください" : "Tap a choice to answer", false);
+    }
+  });
+}
+
+function maybeSpeakFeedback(q, correct, isLast){
+  if(!state.voiceMode || state.voiceMuted || !synthAvailable) return;
+  stopListening();
+  voiceStatusBar.hidden = false;
+  setVoiceStatus(t("voiceSpeaking"), false);
+
+  let text = correct ? t("correctFeedback") : (t("wrongFeedback") + (state.lang==="jp"?"。 ":". ") + q.hint[state.lang]);
+
+  speak(text, ()=>{
+    const s = state.session;
+    if(!s || s.ended) return;
+    const nextMsgKey = isLast ? "voiceResultsReady" : "voiceAdvancing";
+    setVoiceStatus(t(nextMsgKey), false);
+    speak(t(nextMsgKey), ()=>{
+      goToNextQuestion();
+    });
+  });
+}
+
 /* ================= INIT ================= */
 applyStaticI18n();
+updateVoiceToggleUI();
 renderTopStats();
 showScreen("top");
 

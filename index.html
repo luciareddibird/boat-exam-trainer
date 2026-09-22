@@ -54,6 +54,16 @@
       </div>
       <p class="mock-note" data-i18n="mockNote">※「模試」は実際の小型船舶操縦士学科試験に合わせた時間・問題数の模擬試験です(目安)。</p>
 
+      <button id="voiceModeToggle" class="voice-toggle" type="button" aria-pressed="false">
+        <span class="voice-toggle-icon">🎧</span>
+        <span class="voice-toggle-text">
+          <span class="voice-toggle-title" data-i18n="voiceModeLabel">音声モード（ながらトレーニング）</span>
+          <span class="voice-toggle-desc" data-i18n="voiceModeDesc">問題と選択肢を読み上げ、声で回答できます。作業しながらでも耳だけで練習できます。</span>
+        </span>
+        <span class="voice-toggle-switch" id="voiceToggleSwitch"></span>
+      </button>
+      <p id="voiceUnsupportedNote" class="voice-unsupported-note" data-i18n="voiceUnsupported" hidden>このブラウザは音声認識に対応していません（Chrome/Edge推奨）。読み上げのみ利用できます。</p>
+
       <div class="stats-row" id="statsRow"></div>
 
       <button id="startBtn" class="start-btn" type="button" disabled data-i18n="selectFirst">上の時間を選択してください</button>
@@ -75,6 +85,14 @@
       <div class="hud-item score-item">
         <span class="hud-label" data-i18n="correctLabel">正解</span>
         <span id="qScore" class="hud-value">0</span>
+      </div>
+    </div>
+
+    <div id="voiceStatusBar" class="voice-status-bar" hidden>
+      <span id="voiceStatusText" class="voice-status-text"></span>
+      <div class="voice-status-btns">
+        <button id="voiceMicBtn" class="voice-mini-btn" type="button" data-i18n="voiceMicBtn">🎤 もう一度聞く</button>
+        <button id="voiceMuteBtn" class="voice-mini-btn" type="button" data-i18n="voiceMuteBtn">🔇 音声を止める</button>
       </div>
     </div>
 
