@@ -498,7 +498,38 @@ const VOICE_KEYWORDS = {
   ]
 };
 
-function speechLang(){ return state.lang === "jp" ? "ja-JP" : "en-US"; }
+function speechLang(){ return state.lang === "jp" ? "ja-JP" : "en-GB"; }
+
+/* Pick the best-matching installed voice so English is read in a British
+   accent (not a Japanese-accented fallback voice) when one is available. */
+let cachedVoices = [];
+function refreshVoiceCache(){
+  if(synthAvailable){
+    try{ cachedVoices = window.speechSynthesis.getVoices() || []; }catch(e){ cachedVoices = []; }
+  }
+}
+if(synthAvailable){
+  refreshVoiceCache();
+  window.speechSynthesis.onvoiceschanged = refreshVoiceCache;
+}
+
+function pickVoice(lang){
+  if(!cachedVoices.length) return null;
+  if(lang === "ja-JP"){
+    return cachedVoices.find(v=>v.lang === "ja-JP") ||
+      cachedVoices.find(v=>v.lang && v.lang.startsWith("ja")) || null;
+  }
+  // English: prefer an explicit British voice, then any "en-GB" locale,
+  // then fall back to any other English voice rather than a non-English one.
+  const byNameGB = cachedVoices.find(v=>v.lang==="en-GB" && /uk|british|gb/i.test(v.name));
+  if(byNameGB) return byNameGB;
+  const exactGB = cachedVoices.find(v=>v.lang==="en-GB");
+  if(exactGB) return exactGB;
+  const anyGB = cachedVoices.find(v=>v.lang && v.lang.toLowerCase().startsWith("en-gb"));
+  if(anyGB) return anyGB;
+  const anyEnglish = cachedVoices.find(v=>v.lang && v.lang.toLowerCase().startsWith("en"));
+  return anyEnglish || null;
+}
 
 function updateVoiceToggleUI(){
   voiceModeToggle.classList.toggle("on", state.voiceMode);
@@ -549,8 +580,11 @@ function speak(text, onEnd){
   }
   try{
     window.speechSynthesis.cancel();
+    const lang = speechLang();
     const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = speechLang();
+    utter.lang = lang;
+    const voice = pickVoice(lang);
+    if(voice) utter.voice = voice;
     utter.rate = 1.0;
     utter.onend = ()=>{ if(onEnd) onEnd(); };
     utter.onerror = ()=>{ if(onEnd) onEnd(); };
