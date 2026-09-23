@@ -728,14 +728,18 @@ function startListening(){
     const s0 = state.session;
     if(!s0 || !s0.current || s0.current.answered) return;
     reallyStartListening(myToken);
-  }, 120);
+  }, 60);
 }
 
 function reallyStartListening(myToken){
   recognizer = new SpeechRecognitionCtor();
   recognizer.lang = speechLang();
   recognizer.continuous = false;
-  recognizer.interimResults = false;
+  // Interim results let us react the instant a guess matches a choice,
+  // instead of waiting for the recognizer to decide the phrase is
+  // "final" — which normally requires detecting a pause after the user
+  // stops talking and was the main cause of sluggish-feeling answers.
+  recognizer.interimResults = true;
   recognizer.maxAlternatives = 4;
 
   let started = false;
@@ -749,17 +753,27 @@ function reallyStartListening(myToken){
     if(myToken !== listenToken) return;
     const s2 = state.session;
     if(!s2 || !s2.current || s2.current.answered) return;
-    const results = event.results[0];
+
     let matched = -1;
-    for(let i=0;i<results.length;i++){
-      matched = matchChoiceFromTranscript(results[i].transcript);
+    let isFinal = false;
+    for(let r=0; r<event.results.length; r++){
+      const result = event.results[r];
+      if(result.isFinal) isFinal = true;
+      for(let i=0;i<result.length;i++){
+        matched = matchChoiceFromTranscript(result[i].transcript);
+        if(matched !== -1) break;
+      }
       if(matched !== -1) break;
     }
+
     if(matched !== -1){
       retriedListen = false;
+      stopListening(); // got it — stop right away instead of waiting for finalization
       const btns = choicesWrapEl.querySelectorAll(".choice-btn");
       if(btns[matched]) onChoiceClick(matched, btns[matched]);
-    }else{
+    }else if(isFinal){
+      // Only give up once the recognizer itself is done with this phrase —
+      // an interim non-match just means "keep listening, not done yet".
       handleNotHeard();
     }
   };
@@ -867,7 +881,7 @@ function maybeSpeakQuestion(){
         const s3 = state.session;
         if(!s3 || !s3.current || s3.current.answered || !state.voiceMode || state.voiceMuted) return;
         startListening();
-      }, 350);
+      }, 150);
     }else{
       setVoiceStatus(state.lang==="jp" ? "選択肢をタップして回答してください" : "Tap a choice to answer", false);
     }
