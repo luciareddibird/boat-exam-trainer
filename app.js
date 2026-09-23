@@ -246,6 +246,7 @@ function onChoiceClick(idx, btnEl){
   const s = state.session;
   if(s.current.answered) return;
   stopListening();
+  stopSpeaking();
   const q = QMAP[s.current.id];
   const correct = idx === q.answer;
 
@@ -557,6 +558,7 @@ voiceMicBtn.addEventListener("click", ()=>{
   const s = state.session;
   if(!s || !s.current || s.current.answered) return;
   retriedListen = false;
+  stopSpeaking(); // let the user jump straight to answering even if still reading
   startListening();
 });
 
@@ -573,7 +575,34 @@ voiceMuteBtn.addEventListener("click", ()=>{
   }
 });
 
+/* Monotonically-increasing tokens let us tell a "real" finish/error apart
+   from an old utterance or recognizer session being cancelled by our own
+   code (e.g. starting a new question while a previous one is still
+   speaking). Without this, a cancelled utterance's onend/onerror would
+   fire the STALE callback and could jump straight to listening mode
+   mid-sentence, or misreport a valid answer as "not heard". */
+let speechToken = 0;
+let listenToken = 0;
+
+// Chrome silently stops long utterances (~15s) unless kept alive with a
+// pause/resume nudge. Without this, a question+choices utterance can be
+// cut off partway through and fire "onend" as if it had finished normally.
+let keepAliveTimer = null;
+function startKeepAlive(){
+  stopKeepAlive();
+  keepAliveTimer = setInterval(()=>{
+    if(synthAvailable && window.speechSynthesis.speaking){
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    }
+  }, 9000);
+}
+function stopKeepAlive(){
+  if(keepAliveTimer){ clearInterval(keepAliveTimer); keepAliveTimer = null; }
+}
+
 function speak(text, onEnd){
+  const myToken = ++speechToken;
   if(!synthAvailable || state.voiceMuted || !state.voiceMode){
     if(onEnd) onEnd();
     return;
@@ -586,21 +615,30 @@ function speak(text, onEnd){
     const voice = pickVoice(lang);
     if(voice) utter.voice = voice;
     utter.rate = 1.0;
-    utter.onend = ()=>{ if(onEnd) onEnd(); };
-    utter.onerror = ()=>{ if(onEnd) onEnd(); };
+    const finish = ()=>{
+      if(myToken !== speechToken) return; // superseded by a newer speak() call — ignore
+      stopKeepAlive();
+      if(onEnd) onEnd();
+    };
+    utter.onend = finish;
+    utter.onerror = finish;
     window.speechSynthesis.speak(utter);
+    startKeepAlive();
   }catch(e){
-    if(onEnd) onEnd();
+    if(myToken === speechToken && onEnd) onEnd();
   }
 }
 
 function stopSpeaking(){
+  speechToken++; // invalidate any in-flight utterance's callback
+  stopKeepAlive();
   if(synthAvailable){
     try{ window.speechSynthesis.cancel(); }catch(e){/* ignore */}
   }
 }
 
 function stopListening(){
+  listenToken++; // invalidate the current recognizer's callbacks immediately
   if(recognizer && recognizerActive){
     try{ recognizer.abort(); }catch(e){/* ignore */}
   }
@@ -634,7 +672,9 @@ function startListening(){
   if(!recognitionAvailable || !state.voiceMode || state.voiceMuted) return;
   if(!s || !s.current || s.current.answered) return;
 
-  stopListening();
+  stopListening(); // bumps listenToken, so the OLD recognizer's late events become no-ops
+  const myToken = listenToken;
+
   recognizer = new SpeechRecognitionCtor();
   recognizer.lang = speechLang();
   recognizer.continuous = false;
@@ -642,6 +682,7 @@ function startListening(){
   recognizer.maxAlternatives = 4;
 
   recognizer.onresult = (event)=>{
+    if(myToken !== listenToken) return;
     const s2 = state.session;
     if(!s2 || !s2.current || s2.current.answered) return;
     const results = event.results[0];
@@ -658,12 +699,23 @@ function startListening(){
       handleNotHeard();
     }
   };
-  recognizer.onerror = ()=>{
+  recognizer.onerror = (event)=>{
+    if(myToken !== listenToken){ recognizerActive = false; return; }
     recognizerActive = false;
+    // "aborted" happens whenever OUR OWN code calls stopListening()/abort() —
+    // e.g. the user tapped a choice, or a fresh listen was started. That is
+    // not a real failure and must not trigger the "didn't catch that" flow.
+    if(event.error === "aborted") return;
+    if(event.error === "not-allowed" || event.error === "service-not-allowed"){
+      voiceStatusBar.hidden = false;
+      setVoiceStatus(state.lang==="jp" ? "🎤 マイクの使用が許可されていません" : "🎤 Microphone access was not granted", false);
+      return;
+    }
     const s2 = state.session;
     if(s2 && s2.current && !s2.current.answered) handleNotHeard();
   };
   recognizer.onend = ()=>{
+    if(myToken !== listenToken) return;
     recognizerActive = false;
   };
 
@@ -711,7 +763,13 @@ function maybeSpeakQuestion(){
     const s2 = state.session;
     if(!s2 || !s2.current || s2.current.answered) return;
     if(recognitionAvailable){
-      startListening();
+      // Small pause so the mic doesn't pick up the tail end of the TTS
+      // audio (feedback/echo) as if it were the user's answer.
+      setTimeout(()=>{
+        const s3 = state.session;
+        if(!s3 || !s3.current || s3.current.answered || !state.voiceMode || state.voiceMuted) return;
+        startListening();
+      }, 350);
     }else{
       setVoiceStatus(state.lang==="jp" ? "選択肢をタップして回答してください" : "Tap a choice to answer", false);
     }
