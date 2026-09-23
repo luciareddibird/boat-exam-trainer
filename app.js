@@ -594,9 +594,13 @@ voiceModeToggle.addEventListener("click", ()=>{
 voiceMicBtn.addEventListener("click", ()=>{
   const s = state.session;
   if(!s || !s.current || s.current.answered) return;
+  // This button means "repeat that" — re-read the question and choices out
+  // loud, then listen again. (Silently jumping straight to listening, with
+  // no audible confirmation, made the button look unresponsive in a
+  // hands-free / eyes-free workflow.)
   retriedListen = false;
-  stopSpeaking(); // let the user jump straight to answering even if still reading
-  startListening(); // internally waits a beat before actually starting the recognizer
+  stopListening();
+  maybeSpeakQuestion();
 });
 
 voiceMuteBtn.addEventListener("click", ()=>{
