@@ -907,6 +907,154 @@ function maybeSpeakFeedback(q, correct, isLast){
   });
 }
 
+/* ================= MIC DIAGNOSTIC TEST =================
+   Completely independent of the quiz's voice module above — talks to
+   the raw browser APIs directly with nothing else in the way, so we can
+   tell whether a problem is this app's logic or the browser/device/
+   network itself. */
+const openMicTestBtn = document.getElementById("openMicTestBtn");
+const backFromMicTestBtn = document.getElementById("backFromMicTestBtn");
+const micTestEnv = document.getElementById("micTestEnv");
+const micTestStartBtn = document.getElementById("micTestStartBtn");
+const micTestStopBtn = document.getElementById("micTestStopBtn");
+const micTestLog = document.getElementById("micTestLog");
+
+let micTestRecognizer = null;
+let micTestRunning = false;
+
+function micTestLogLine(cls, msg){
+  const t0 = new Date();
+  const ts = `${String(t0.getMinutes()).padStart(2,"0")}:${String(t0.getSeconds()).padStart(2,"0")}.${String(t0.getMilliseconds()).padStart(3,"0")}`;
+  const line = document.createElement("div");
+  line.className = "log-line" + (cls ? " "+cls : "");
+  line.textContent = `[${ts}] ${msg}`;
+  micTestLog.appendChild(line);
+  micTestLog.scrollTop = micTestLog.scrollHeight;
+}
+
+function renderMicTestEnv(){
+  const secure = window.isSecureContext;
+  const lines = [
+    `URL: ${location.href}`,
+    `Secure context (HTTPS/localhost): ${secure ? "Yes ✅" : "No ❌ — mic will NOT work over plain http://"}`,
+    `SpeechRecognition API available: ${recognitionAvailable ? "Yes ✅" : "No ❌ (try Chrome or Edge)"}`,
+    `speechSynthesis available: ${synthAvailable ? "Yes ✅" : "No ❌"}`,
+    `User agent: ${navigator.userAgent}`
+  ];
+  micTestEnv.textContent = lines.join("\n");
+}
+
+openMicTestBtn.addEventListener("click", ()=>{
+  stopVoice();
+  renderMicTestEnv();
+  micTestLog.innerHTML = "";
+  showScreen("mictest");
+});
+backFromMicTestBtn.addEventListener("click", ()=>{
+  micTestStop();
+  showScreen("top");
+});
+
+function micTestStop(){
+  micTestRunning = false;
+  if(micTestRecognizer){
+    try{ micTestRecognizer.abort(); }catch(e){/* ignore */}
+  }
+  micTestStartBtn.hidden = false;
+  micTestStopBtn.hidden = true;
+}
+
+micTestStopBtn.addEventListener("click", micTestStop);
+
+micTestStartBtn.addEventListener("click", ()=>{
+  micTestLog.innerHTML = "";
+  micTestLogLine("log-info", "Checking environment…");
+  renderMicTestEnv();
+
+  if(!recognitionAvailable){
+    micTestLogLine("log-error", "SpeechRecognition is not available in this browser. Try Chrome or Edge on desktop/Android.");
+    return;
+  }
+  if(!window.isSecureContext){
+    micTestLogLine("log-error", "Not a secure context — the mic will be blocked. Use https:// (or http://localhost for local testing).");
+    return;
+  }
+
+  micTestLogLine("log-info", "Requesting microphone permission via getUserMedia()…");
+  const gum = navigator.mediaDevices && navigator.mediaDevices.getUserMedia
+    ? navigator.mediaDevices.getUserMedia({audio:true})
+    : Promise.reject(new Error("getUserMedia not available"));
+
+  gum.then((stream)=>{
+    micTestLogLine("log-info", "✅ Microphone permission granted.");
+    stream.getTracks().forEach(tr=>tr.stop());
+    micTestRunReco();
+  }).catch((err)=>{
+    micTestLogLine("log-error", "❌ getUserMedia failed: " + (err && err.name ? err.name : err) + " — trying SpeechRecognition directly anyway…");
+    micTestRunReco();
+  });
+});
+
+function micTestRunReco(){
+  micTestStartBtn.hidden = true;
+  micTestStopBtn.hidden = false;
+  micTestRunning = true;
+
+  micTestRecognizer = new SpeechRecognitionCtor();
+  micTestRecognizer.lang = speechLang();
+  micTestRecognizer.continuous = true;
+  micTestRecognizer.interimResults = true;
+  micTestRecognizer.maxAlternatives = 3;
+
+  micTestLogLine("log-info", `Starting recognizer (lang=${micTestRecognizer.lang}, continuous=true)…`);
+
+  micTestRecognizer.onstart = ()=>{
+    micTestLogLine("log-info", "🎤 onstart fired — recognizer is listening. Try saying something now.");
+  };
+  micTestRecognizer.onaudiostart = ()=> micTestLogLine("log-info", "onaudiostart — mic audio capture began.");
+  micTestRecognizer.onsoundstart = ()=> micTestLogLine("log-info", "onsoundstart — sound detected.");
+  micTestRecognizer.onspeechstart = ()=> micTestLogLine("log-info", "onspeechstart — speech detected.");
+  micTestRecognizer.onspeechend = ()=> micTestLogLine("log-info", "onspeechend — speech segment ended.");
+  micTestRecognizer.onsoundend = ()=> micTestLogLine("log-info", "onsoundend.");
+  micTestRecognizer.onaudioend = ()=> micTestLogLine("log-info", "onaudioend.");
+
+  micTestRecognizer.onresult = (event)=>{
+    for(let r=event.resultIndex; r<event.results.length; r++){
+      const result = event.results[r];
+      const alt = result[0];
+      if(result.isFinal){
+        micTestLogLine("log-final", `FINAL: "${alt.transcript}" (confidence: ${alt.confidence ? alt.confidence.toFixed(2) : "n/a"})`);
+      }else{
+        micTestLogLine("log-interim", `interim: "${alt.transcript}"`);
+      }
+    }
+  };
+  micTestRecognizer.onerror = (event)=>{
+    micTestLogLine("log-error", `onerror: ${event.error}${event.message ? " — "+event.message : ""}`);
+    if(event.error === "not-allowed" || event.error === "service-not-allowed"){
+      micTestLogLine("log-error", "→ Microphone permission is blocked for this site. Click the padlock/mic icon in the address bar to allow it, then try again.");
+      micTestStop();
+    }else if(event.error === "network"){
+      micTestLogLine("log-error", "→ Chrome's speech recognition needs an internet connection to its recognition service — check your network/firewall/VPN.");
+    }
+  };
+  micTestRecognizer.onend = ()=>{
+    micTestLogLine("log-info", "onend fired (recognizer stopped).");
+    if(micTestRunning){
+      micTestLogLine("log-info", "Restarting (continuous mode)…");
+      try{ micTestRecognizer.start(); }
+      catch(e){ micTestLogLine("log-error", "Restart failed: "+e.message); micTestStop(); }
+    }
+  };
+
+  try{
+    micTestRecognizer.start();
+  }catch(e){
+    micTestLogLine("log-error", "recognizer.start() threw synchronously: " + e.message);
+    micTestStop();
+  }
+}
+
 /* ================= INIT ================= */
 applyStaticI18n();
 updateVoiceToggleUI();

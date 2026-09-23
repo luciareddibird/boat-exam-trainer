@@ -217,6 +217,41 @@ body{
 .start-btn:hover:not(:disabled){transform:translateY(-2px); box-shadow:var(--shadow);}
 .start-btn:disabled{opacity:0.5; cursor:not-allowed;}
 
+/* ---------- MIC DIAGNOSTIC TEST ---------- */
+.mic-test-link{
+  display:block; width:100%; margin-top:10px;
+  background:none; border:none;
+  color:var(--text-soft); font-size:0.78rem;
+  text-decoration:underline; cursor:pointer;
+  font-family:inherit; padding:6px;
+}
+.mic-test-env{
+  background:var(--foam); border:1px solid #d6ecf3; border-radius:12px;
+  padding:12px 14px; margin-bottom:14px;
+  font-size:0.78rem; color:var(--text-soft); line-height:1.7;
+  white-space:pre-line; word-break:break-all;
+}
+.mic-test-stop{
+  display:block; width:100%; margin-top:10px;
+  background:var(--coral); border:none; color:var(--white);
+}
+.mic-test-back{
+  margin-top:14px;
+  background:var(--foam); color:var(--navy); border:2px solid #d6ecf3;
+  box-shadow:none;
+}
+.mic-test-log{
+  margin-top:16px; max-height:340px; overflow-y:auto;
+  background:var(--navy-deep); border-radius:12px; padding:12px 14px;
+  font-family:"Consolas","Menlo",monospace; font-size:0.78rem; line-height:1.7;
+  color:#cdeaf5;
+}
+.mic-test-log .log-line{white-space:pre-wrap; word-break:break-word; margin-bottom:2px;}
+.mic-test-log .log-final{color:#7CFFB2; font-weight:700;}
+.mic-test-log .log-interim{color:#ffd98e;}
+.mic-test-log .log-error{color:#ff8a80; font-weight:700;}
+.mic-test-log .log-info{color:#8ecfe8;}
+
 /* ---------- QUIZ SCREEN ---------- */
 .quiz-hud{
   background:var(--navy);

@@ -67,6 +67,28 @@
       <div class="stats-row" id="statsRow"></div>
 
       <button id="startBtn" class="start-btn" type="button" disabled data-i18n="selectFirst">上の時間を選択してください</button>
+
+      <button id="openMicTestBtn" class="mic-test-link" type="button">🔧 マイク動作テスト / Mic diagnostic test</button>
+    </div>
+  </section>
+
+  <!-- ============ MIC DIAGNOSTIC TEST SCREEN ============ -->
+  <section id="screen-mictest" class="screen">
+    <div class="panel">
+      <h2 class="panel-title">🔧 マイク動作テスト / Mic Diagnostic Test</h2>
+      <p class="mock-note" style="text-align:left; margin-bottom:16px;">
+        アプリのロジックを介さず、ブラウザの音声認識APIを直接テストします。うまくいかない場合の原因切り分けにお使いください。<br>
+        This tests the browser's raw speech recognition API directly, bypassing all app logic — use it to isolate whether the problem is the browser/device itself.
+      </p>
+
+      <div id="micTestEnv" class="mic-test-env"></div>
+
+      <button id="micTestStartBtn" class="start-btn" type="button">🎤 テスト開始 / Start Test</button>
+      <button id="micTestStopBtn" class="voice-mini-btn mic-test-stop" type="button" hidden>■ 停止 / Stop</button>
+
+      <div id="micTestLog" class="mic-test-log"></div>
+
+      <button id="backFromMicTestBtn" class="start-btn mic-test-back" type="button">← トップへ戻る / Back to top</button>
     </div>
   </section>
 
