@@ -548,10 +548,47 @@ if(!synthAvailable){
   voiceUnsupportedNote.hidden = false;
 }
 
+// 'unknown' | 'granted' | 'denied' — tracked so we only show the mic
+// permission prompt once, at a clear, predictable moment (the voice-mode
+// toggle click), instead of it silently failing later mid-quiz.
+let micPermission = "unknown";
+
+function primeMicPermission(){
+  if(!recognitionAvailable || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    return Promise.resolve(true); // nothing we can prime; let SpeechRecognition try on its own
+  }
+  return navigator.mediaDevices.getUserMedia({audio:true}).then((stream)=>{
+    stream.getTracks().forEach(track=>track.stop());
+    micPermission = "granted";
+    return true;
+  }).catch(()=>{
+    micPermission = "denied";
+    return false;
+  });
+}
+
 voiceModeToggle.addEventListener("click", ()=>{
-  state.voiceMode = !state.voiceMode;
+  const turningOn = !state.voiceMode;
+  state.voiceMode = turningOn;
   updateVoiceToggleUI();
-  if(!state.voiceMode) stopVoice();
+  if(!turningOn){
+    stopVoice();
+    return;
+  }
+  if(recognitionAvailable && micPermission !== "granted"){
+    voiceStatusBar.hidden = false;
+    setVoiceStatus(state.lang==="jp" ? "🎤 マイクの使用許可を確認しています…" : "🎤 Requesting microphone permission…", false);
+    primeMicPermission().then((ok)=>{
+      if(!state.voiceMode) return;
+      if(ok){
+        voiceStatusBar.hidden = true;
+      }else{
+        setVoiceStatus(state.lang==="jp"
+          ? "🎤 マイクが許可されていません。ブラウザのアドレスバーのマイクアイコンから許可してください。"
+          : "🎤 Microphone blocked. Allow it via the mic icon in your browser's address bar.", false);
+      }
+    });
+  }
 });
 
 voiceMicBtn.addEventListener("click", ()=>{
@@ -559,7 +596,7 @@ voiceMicBtn.addEventListener("click", ()=>{
   if(!s || !s.current || s.current.answered) return;
   retriedListen = false;
   stopSpeaking(); // let the user jump straight to answering even if still reading
-  startListening();
+  startListening(); // internally waits a beat before actually starting the recognizer
 });
 
 voiceMuteBtn.addEventListener("click", ()=>{
@@ -675,11 +712,34 @@ function startListening(){
   stopListening(); // bumps listenToken, so the OLD recognizer's late events become no-ops
   const myToken = listenToken;
 
+  voiceStatusBar.hidden = false;
+  setVoiceStatus(state.lang==="jp" ? "🎤 マイクを準備しています…" : "🎤 Preparing microphone…", false);
+
+  // Give the browser a beat to fully release any just-aborted recognition
+  // session before starting a new one — starting immediately after abort()
+  // can throw "recognition has already started" and fail with no visible
+  // feedback at all.
+  setTimeout(()=>{
+    if(myToken !== listenToken) return; // superseded before we even got going
+    const s0 = state.session;
+    if(!s0 || !s0.current || s0.current.answered) return;
+    reallyStartListening(myToken);
+  }, 120);
+}
+
+function reallyStartListening(myToken){
   recognizer = new SpeechRecognitionCtor();
   recognizer.lang = speechLang();
   recognizer.continuous = false;
   recognizer.interimResults = false;
   recognizer.maxAlternatives = 4;
+
+  let started = false;
+  recognizer.onstart = ()=>{
+    if(myToken !== listenToken) return;
+    started = true;
+    setVoiceStatus(t("voiceListening"), true);
+  };
 
   recognizer.onresult = (event)=>{
     if(myToken !== listenToken) return;
@@ -725,8 +785,42 @@ function startListening(){
     voiceStatusBar.hidden = false;
     setVoiceStatus(t("voiceListening"), true);
   }catch(e){
+    // start() can throw synchronously (most commonly "recognition has
+    // already started") if the browser hasn't fully released the mic from
+    // a just-aborted session yet. Previously this failed with zero visible
+    // feedback — now we retry once after a short pause, then give up with
+    // a clear message so the user can tap "Listen again".
     recognizerActive = false;
+    if(myToken !== listenToken) return;
+    setTimeout(()=>{
+      if(myToken !== listenToken) return;
+      const s2 = state.session;
+      if(!s2 || !s2.current || s2.current.answered) return;
+      try{
+        recognizer.start();
+        recognizerActive = true;
+        setVoiceStatus(t("voiceListening"), true);
+      }catch(e2){
+        recognizerActive = false;
+        setVoiceStatus(state.lang==="jp"
+          ? "🎤 マイクを開始できませんでした。もう一度お試しください。"
+          : "🎤 Couldn't start the microphone. Please try again.", false);
+      }
+    }, 400);
+    return;
   }
+
+  // Watchdog: if the browser never fires onstart/onresult/onerror/onend
+  // (rare, but happens with some mic driver issues), don't leave the UI
+  // stuck showing "listening" forever.
+  setTimeout(()=>{
+    if(myToken !== listenToken) return;
+    if(!started && recognizerActive){
+      stopListening();
+      const s2 = state.session;
+      if(s2 && s2.current && !s2.current.answered) handleNotHeard();
+    }
+  }, 6000);
 }
 
 function handleNotHeard(){
