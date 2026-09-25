@@ -693,17 +693,62 @@ function stopVoice(){
   voiceStatusBar.hidden = true;
 }
 
+/* English answers arrive as homophones and short phrases, not a bare
+   letter: "B" comes back as "be"/"bee", "C" as "see"/"sea", "2" as
+   "to"/"too", "4" as "for", and people say "option B" / "the answer is
+   B". Requiring the whole transcript to equal "b" missed nearly all of
+   these. STRONG tokens are safe to accept anywhere; WEAK ones are
+   ordinary words ("to", "for", "be", "see"...) so they only count when
+   the utterance is very short or directly follows a cue word. */
+const EN_STRONG = {
+  a:0, "1":0, one:0, alpha:0,
+  b:1, "2":1, two:1, bee:1, bravo:1,
+  c:2, "3":2, three:2, charlie:2,
+  d:3, "4":3, four:3, dee:3, delta:3
+};
+const EN_WEAK = {
+  eh:0, ay:0, hey:0, won:0,
+  be:1, to:1, too:1,
+  see:2, sea:2, si:2,
+  for:3, fore:3
+};
+const EN_CUES = new Set(["option","answer","choice","letter","number","is","choose","pick","select"]);
+
+function matchEnglish(raw){
+  const tokens = raw.toLowerCase().replace(/[^a-z0-9\s']/g," ").split(/\s+/).filter(Boolean);
+  if(!tokens.length) return -1;
+  const both = (w)=> (w in EN_STRONG) ? EN_STRONG[w] : ((w in EN_WEAK) ? EN_WEAK[w] : -1);
+
+  // 1) A cue word followed by the choice: "option B", "the answer is see"
+  for(let i=tokens.length-2;i>=0;i--){
+    if(EN_CUES.has(tokens[i])){
+      const m = both(tokens[i+1]);
+      if(m !== -1) return m;
+    }
+  }
+  // 2) Very short utterance ("be", "B please"): homophones are fine
+  if(tokens.length <= 2){
+    for(let i=tokens.length-1;i>=0;i--){
+      const m = both(tokens[i]);
+      if(m !== -1) return m;
+    }
+    return -1;
+  }
+  // 3) Longer sentence: only unambiguous tokens, latest one wins. The bare
+  //    article "a" is excluded here — in a sentence it is just grammar.
+  for(let i=tokens.length-1;i>=0;i--){
+    if(tokens[i] !== "a" && tokens[i] in EN_STRONG) return EN_STRONG[tokens[i]];
+  }
+  return -1;
+}
+
 function matchChoiceFromTranscript(raw){
+  if(state.lang === "en") return matchEnglish(raw);
   const text = raw.toLowerCase().replace(/[.,。、！？!?\s]/g,"");
-  const keywordSets = VOICE_KEYWORDS[state.lang];
+  const keywordSets = VOICE_KEYWORDS.jp;
   for(let i=0;i<keywordSets.length;i++){
     for(const kw of keywordSets[i]){
-      const k = kw.toLowerCase();
-      if(state.lang === "en"){
-        if(text === k) return i;
-      }else{
-        if(text.includes(k)) return i;
-      }
+      if(text.includes(kw.toLowerCase())) return i;
     }
   }
   return -1;
@@ -713,6 +758,7 @@ function matchChoiceFromTranscript(raw){
 // (mic blocked, Dictation off...). Voice mode then degrades to read-aloud
 // + tap instead of looping on a dead recognizer.
 let recognitionBroken = false;
+let lastHeard = ""; // most recent transcript, shown so a miss isn't a mystery
 
 function describeFatalRecognitionError(event){
   const err = event.error;
@@ -767,6 +813,7 @@ function startListening(){
 }
 
 function reallyStartListening(myToken){
+  lastHeard = "";
   recognizer = new SpeechRecognitionCtor();
   recognizer.lang = speechLang();
   recognizer.continuous = false;
@@ -789,6 +836,9 @@ function reallyStartListening(myToken){
     const s2 = state.session;
     if(!s2 || !s2.current || s2.current.answered) return;
 
+    const latest = event.results[event.results.length-1];
+    lastHeard = latest && latest[0] ? latest[0].transcript.trim() : "";
+
     let matched = -1;
     let isFinal = false;
     for(let r=0; r<event.results.length; r++){
@@ -810,6 +860,8 @@ function reallyStartListening(myToken){
       // Only give up once the recognizer itself is done with this phrase —
       // an interim non-match just means "keep listening, not done yet".
       handleNotHeard();
+    }else if(lastHeard){
+      setVoiceStatus((state.lang==="jp" ? "🎤 聞き取り中: 「" : "🎤 Heard: \"") + lastHeard + (state.lang==="jp" ? "」" : "\""), true);
     }
   };
   recognizer.onerror = (event)=>{
@@ -886,7 +938,10 @@ function handleNotHeard(){
   if(retriedListen){
     retriedListen = false;
     voiceStatusBar.hidden = false;
-    setVoiceStatus(t("voiceNotHeard"), false);
+    const heardNote = lastHeard
+      ? (state.lang==="jp" ? `（認識結果: 「${lastHeard}」）` : ` (heard: "${lastHeard}")`)
+      : "";
+    setVoiceStatus(t("voiceNotHeard") + heardNote, false);
     speak(t("voiceNotHeard"));
     return;
   }
