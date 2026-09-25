@@ -575,6 +575,7 @@ voiceModeToggle.addEventListener("click", ()=>{
     stopVoice();
     return;
   }
+  recognitionBroken = false; // let the user retry after fixing a setting
   if(recognitionAvailable && micPermission !== "granted"){
     voiceStatusBar.hidden = false;
     setVoiceStatus(state.lang==="jp" ? "🎤 マイクの使用許可を確認しています…" : "🎤 Requesting microphone permission…", false);
@@ -708,9 +709,43 @@ function matchChoiceFromTranscript(raw){
   return -1;
 }
 
+// Set once the browser/OS reports a failure that retrying can't fix
+// (mic blocked, Dictation off...). Voice mode then degrades to read-aloud
+// + tap instead of looping on a dead recognizer.
+let recognitionBroken = false;
+
+function describeFatalRecognitionError(event){
+  const err = event.error;
+  const msg = (event.message || "").toLowerCase();
+  const jp = state.lang === "jp";
+  if(err === "not-allowed" || err === "service-not-allowed"){
+    if(msg.includes("siri") || msg.includes("dictation")){
+      return jp
+        ? "🎤 Macの「音声入力（Dictation）」がオフです。システム設定 > キーボード > 音声入力 をオンにするか、Chromeで開いてください。今回は読み上げ＋タップ回答で続けます。"
+        : "🎤 Dictation is turned off on this Mac. Enable System Settings > Keyboard > Dictation, or open the app in Chrome. Continuing with read-aloud + tap.";
+    }
+    return jp ? "🎤 マイクの使用が許可されていません。読み上げ＋タップ回答で続けます。"
+              : "🎤 Microphone access was not granted. Continuing with read-aloud + tap.";
+  }
+  if(err === "aborted"){
+    if(msg.includes("siri") || msg.includes("dictation")){
+      return jp
+        ? "🎤 Macの「音声入力（Dictation）」がオフです。システム設定 > キーボード > 音声入力 をオンにするか、Chromeで開いてください。今回は読み上げ＋タップ回答で続けます。"
+        : "🎤 Dictation is turned off on this Mac. Enable System Settings > Keyboard > Dictation, or open the app in Chrome. Continuing with read-aloud + tap.";
+    }
+    return jp ? "🎤 音声認識が中断されました。読み上げ＋タップ回答で続けます。"
+              : "🎤 Speech recognition was interrupted. Continuing with read-aloud + tap.";
+  }
+  if(err === "audio-capture"){
+    return jp ? "🎤 マイクが見つかりません。読み上げ＋タップ回答で続けます。"
+              : "🎤 No microphone found. Continuing with read-aloud + tap.";
+  }
+  return null; // "no-speech", "network", etc. are transient — normal retry flow
+}
+
 function startListening(){
   const s = state.session;
-  if(!recognitionAvailable || !state.voiceMode || state.voiceMuted) return;
+  if(!recognitionAvailable || recognitionBroken || !state.voiceMode || state.voiceMuted) return;
   if(!s || !s.current || s.current.answered) return;
 
   stopListening(); // bumps listenToken, so the OLD recognizer's late events become no-ops
@@ -780,13 +815,17 @@ function reallyStartListening(myToken){
   recognizer.onerror = (event)=>{
     if(myToken !== listenToken){ recognizerActive = false; return; }
     recognizerActive = false;
-    // "aborted" happens whenever OUR OWN code calls stopListening()/abort() —
-    // e.g. the user tapped a choice, or a fresh listen was started. That is
-    // not a real failure and must not trigger the "didn't catch that" flow.
-    if(event.error === "aborted") return;
-    if(event.error === "not-allowed" || event.error === "service-not-allowed"){
+    // Our OWN stopListening() bumps listenToken before aborting, so those
+    // aborts already returned above. An "aborted" that still carries the
+    // current token was therefore raised by the browser/OS itself — e.g.
+    // Safari's "Siri and Dictation are disabled" — and is a real failure
+    // that must be shown, not swallowed (swallowing it made the mic look
+    // completely dead with no explanation).
+    const fatal = describeFatalRecognitionError(event);
+    if(fatal){
+      recognitionBroken = true;
       voiceStatusBar.hidden = false;
-      setVoiceStatus(state.lang==="jp" ? "🎤 マイクの使用が許可されていません" : "🎤 Microphone access was not granted", false);
+      setVoiceStatus(fatal, false);
       return;
     }
     const s2 = state.session;
@@ -874,6 +913,9 @@ function maybeSpeakQuestion(){
   speak(text, ()=>{
     const s2 = state.session;
     if(!s2 || !s2.current || s2.current.answered) return;
+    if(recognitionBroken){
+      return; // fatal mic message is already showing; answer by tapping
+    }
     if(recognitionAvailable){
       // Small pause so the mic doesn't pick up the tail end of the TTS
       // audio (feedback/echo) as if it were the user's answer.
@@ -1031,7 +1073,11 @@ function micTestRunReco(){
   };
   micTestRecognizer.onerror = (event)=>{
     micTestLogLine("log-error", `onerror: ${event.error}${event.message ? " — "+event.message : ""}`);
-    if(event.error === "not-allowed" || event.error === "service-not-allowed"){
+    const emsg = (event.message || "").toLowerCase();
+    if(emsg.includes("siri") || emsg.includes("dictation")){
+      micTestLogLine("log-error", "→ macOS/iOS Dictation is turned off. Turn it on (Mac: System Settings > Keyboard > Dictation; iPhone/iPad: Settings > General > Keyboard > Enable Dictation), or open this page in Chrome instead of Safari.");
+      micTestStop();
+    }else if(event.error === "not-allowed" || event.error === "service-not-allowed"){
       micTestLogLine("log-error", "→ Microphone permission is blocked for this site. Click the padlock/mic icon in the address bar to allow it, then try again.");
       micTestStop();
     }else if(event.error === "network"){
