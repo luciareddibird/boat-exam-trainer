@@ -42,7 +42,17 @@ window.I18N = {
     voiceUnmuteBtn: "🔊 音声を再開",
     voiceNotHeard: "聞き取れませんでした。もう一度お答えください、またはボタンをタップしてください。",
     voiceAdvancing: "次の問題へ進みます…",
-    voiceResultsReady: "結果を確認しましょう。"
+    voiceResultsReady: "結果を確認しましょう。",
+    chartTitle: "分野別の正答率",
+    chartNote: "正答率が低い分野を選んで集中的に練習しましょう。",
+    chartNoData: "まだデータがありません。まずは「すべて」で解いてみましょう。",
+    chartAttempts: "問",
+    chooseSection: "出題するセクションを選んでください",
+    sectionAll: "すべて",
+    sectionGeneral: "心得・遵守事項",
+    sectionRules: "交通の方法",
+    sectionOperation: "運航",
+    sectionMockNote: "※模試は出題構成固定のため、セクション選択は反映されません(全分野から出題)。"
   },
   en: {
     brandText: "Boat License Exam Trainer",
@@ -86,6 +96,16 @@ window.I18N = {
     voiceUnmuteBtn: "🔊 Unmute voice",
     voiceNotHeard: "Didn't catch that. Please answer again, or tap a choice.",
     voiceAdvancing: "Moving to the next question…",
-    voiceResultsReady: "Let's check your results."
+    voiceResultsReady: "Let's check your results.",
+    chartTitle: "Accuracy by Section",
+    chartNote: "Pick your weakest section below to focus your practice.",
+    chartNoData: "No data yet — try \"All\" first to build up stats.",
+    chartAttempts: "Qs",
+    chooseSection: "Choose which section to practice",
+    sectionAll: "All",
+    sectionGeneral: "Rules & Conduct",
+    sectionRules: "Navigation Rules",
+    sectionOperation: "Operation",
+    sectionMockNote: "* The mock exam has a fixed structure, so the section filter doesn't apply (questions are drawn from all sections)."
   }
 };

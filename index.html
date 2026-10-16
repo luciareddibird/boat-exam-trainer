@@ -33,6 +33,12 @@
       <p class="hero-sub" data-i18n="heroSub">ランダム出題・弱点優先・日英対応のミニ模試</p>
     </div>
 
+    <div class="panel chart-panel" id="chartPanel" hidden>
+      <h2 class="panel-title"><span data-i18n="chartTitle">分野別の正答率</span></h2>
+      <div class="cat-chart" id="catChart" role="img"></div>
+      <p class="chart-note" data-i18n="chartNote">正答率が低い分野を選んで集中的に練習しましょう。</p>
+    </div>
+
     <div class="panel">
       <h2 class="panel-title"><span data-i18n="chooseTime">試験時間を選んでください</span></h2>
       <div class="duration-grid" id="durationGrid">
@@ -53,6 +59,15 @@
         </button>
       </div>
       <p class="mock-note" data-i18n="mockNote">※「模試」は実際の小型船舶操縦士学科試験に合わせた時間・問題数の模擬試験です(目安)。</p>
+
+      <h2 class="panel-title section-title"><span data-i18n="chooseSection">出題するセクションを選んでください</span></h2>
+      <div class="section-grid" id="sectionGrid">
+        <button class="section-btn selected" data-section="all" type="button" data-i18n="sectionAll">すべて</button>
+        <button class="section-btn" data-section="general" type="button" data-i18n="sectionGeneral">心得・遵守事項</button>
+        <button class="section-btn" data-section="rules" type="button" data-i18n="sectionRules">交通の方法</button>
+        <button class="section-btn" data-section="operation" type="button" data-i18n="sectionOperation">運航</button>
+      </div>
+      <p class="mock-note" id="sectionMockNote" data-i18n="sectionMockNote" hidden>※模試は出題構成固定のため、セクション選択は反映されません(全分野から出題)。</p>
 
       <button id="voiceModeToggle" class="voice-toggle" type="button" aria-pressed="false">
         <span class="voice-toggle-icon">🎧</span>

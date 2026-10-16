@@ -13,10 +13,25 @@ function saveWrongCounts(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(wrongCounts)); }catch(e){/* ignore */}
 }
 
+/* ---------------- persistent per-category accuracy (for the weak-section chart) ---------------- */
+const CAT_STATS_KEY = "boatExam_categoryStats_v1";
+const CATS = ["general","rules","operation"];
+let categoryStats = {};
+try{
+  const raw = localStorage.getItem(CAT_STATS_KEY);
+  if(raw) categoryStats = JSON.parse(raw) || {};
+}catch(e){ categoryStats = {}; }
+CATS.forEach(c=>{ if(!categoryStats[c]) categoryStats[c] = {correct:0, wrong:0}; });
+
+function saveCategoryStats(){
+  try{ localStorage.setItem(CAT_STATS_KEY, JSON.stringify(categoryStats)); }catch(e){/* ignore */}
+}
+
 /* ---------------- app state ---------------- */
 const state = {
   lang: "jp",
   selectedMinutes: null, // number or "mock"
+  selectedSection: "all", // "all" | "general" | "rules" | "operation"
   screen: "top",
   session: null,
   voiceMode: false,
@@ -67,8 +82,11 @@ function buildMockQueue(){
   const op = weightedShuffle(opIds).slice(0,24);
   return plainShuffle(gr.concat(op));
 }
-function buildTimedBatch(excludeFirstId){
-  const all = QUESTIONS.map(q=>q.id);
+function buildTimedBatch(excludeFirstId, section){
+  const pool = (section && section !== "all")
+    ? QUESTIONS.filter(q=>q.category===section)
+    : QUESTIONS;
+  const all = pool.map(q=>q.id);
   let order = weightedShuffle(all);
   if(excludeFirstId && order[0] === excludeFirstId && order.length>1){
     [order[0], order[1]] = [order[1], order[0]];
@@ -87,6 +105,10 @@ function showScreen(name){
 const durationGrid = document.getElementById("durationGrid");
 const startBtn = document.getElementById("startBtn");
 const statsRow = document.getElementById("statsRow");
+const sectionGrid = document.getElementById("sectionGrid");
+const sectionMockNote = document.getElementById("sectionMockNote");
+const chartPanel = document.getElementById("chartPanel");
+const catChart = document.getElementById("catChart");
 
 durationGrid.addEventListener("click", (e)=>{
   const btn = e.target.closest(".duration-btn");
@@ -96,6 +118,21 @@ durationGrid.addEventListener("click", (e)=>{
   btn.classList.add("selected");
   startBtn.disabled = false;
   startBtn.textContent = t("startBtnLabel");
+  updateSectionGridEnabled();
+});
+
+function updateSectionGridEnabled(){
+  const isMock = state.selectedMinutes === "mock";
+  sectionGrid.querySelectorAll(".section-btn").forEach(b=>{ b.disabled = isMock; });
+  sectionMockNote.hidden = !isMock;
+}
+
+sectionGrid.addEventListener("click", (e)=>{
+  const btn = e.target.closest(".section-btn");
+  if(!btn || btn.disabled) return;
+  state.selectedSection = btn.dataset.section;
+  sectionGrid.querySelectorAll(".section-btn").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
 });
 
 startBtn.addEventListener("click", ()=>{
@@ -115,6 +152,48 @@ function renderTopStats(){
       : `Past mistakes: ${totalMistakes} (${trackedQs} questions)`;
     statsRow.appendChild(chip);
   }
+  renderCategoryChart();
+}
+
+const CAT_COLOR = {general:"var(--cat-general)", rules:"var(--cat-rules)", operation:"var(--cat-operation)"};
+
+function renderCategoryChart(){
+  const totalAnswered = CATS.reduce((sum,c)=>sum + categoryStats[c].correct + categoryStats[c].wrong, 0);
+  if(totalAnswered === 0){
+    chartPanel.hidden = true;
+    return;
+  }
+  chartPanel.hidden = false;
+  catChart.innerHTML = "";
+  CATS.forEach(cat=>{
+    const s = categoryStats[cat];
+    const total = s.correct + s.wrong;
+    const pct = total>0 ? Math.round((s.correct/total)*100) : 0;
+
+    const row = document.createElement("div");
+    row.className = "chart-row";
+
+    const head = document.createElement("div");
+    head.className = "chart-row-head";
+    head.innerHTML = `<span class="chart-row-label"><span class="chart-row-swatch" style="background:${CAT_COLOR[cat]}"></span>${t("statCategory")[cat]}</span>`
+      + (total>0
+        ? `<span class="chart-row-value">${pct}%<span class="chart-row-sub"> (${total}${t("chartAttempts")})</span></span>`
+        : `<span class="chart-row-sub">${t("chartNoData")}</span>`);
+    row.appendChild(head);
+
+    const track = document.createElement("div");
+    track.className = "chart-bar-track";
+    const fill = document.createElement("div");
+    fill.className = "chart-bar-fill";
+    fill.style.background = CAT_COLOR[cat];
+    fill.style.width = "0%";
+    track.appendChild(fill);
+    track.setAttribute("aria-label", `${t("statCategory")[cat]}: ${pct}%`);
+    row.appendChild(track);
+
+    catChart.appendChild(row);
+    requestAnimationFrame(()=>{ fill.style.width = (total>0 ? pct : 0) + "%"; });
+  });
 }
 
 /* ================= QUIZ SCREEN ================= */
@@ -130,11 +209,13 @@ const nextBtn = document.getElementById("nextBtn");
 
 function startSession(minutes){
   const isMock = minutes === "mock";
+  const section = isMock ? "all" : state.selectedSection;
   const durationSec = isMock ? 70*60 : minutes*60;
-  const queue = isMock ? buildMockQueue() : buildTimedBatch(null);
+  const queue = isMock ? buildMockQueue() : buildTimedBatch(null, section);
 
   state.session = {
     isMock,
+    section,
     durationSec,
     remainingSec: durationSec,
     queue,
@@ -181,7 +262,7 @@ function loadQuestionAt(index){
   if(index >= s.queue.length){
     if(s.isMock){ finishSession(); return; }
     const lastId = s.queue[s.queue.length-1];
-    s.queue = s.queue.concat(buildTimedBatch(lastId));
+    s.queue = s.queue.concat(buildTimedBatch(lastId, s.section));
   }
   s.index = index;
   s.current = { id: s.queue[index], answered:false, chosenIndex:null };
@@ -258,6 +339,8 @@ function onChoiceClick(idx, btnEl){
     wrongCounts[q.id] = (wrongCounts[q.id]||0) + 1;
     saveWrongCounts();
   }
+  categoryStats[q.category][correct ? "correct" : "wrong"]++;
+  saveCategoryStats();
 
   lockChoices(q, idx);
   showFeedback(q, correct);
@@ -446,6 +529,7 @@ retryBtn.addEventListener("click", ()=>{
   document.querySelectorAll(".duration-btn").forEach(b=>b.classList.remove("selected"));
   startBtn.disabled = true;
   startBtn.textContent = t("selectFirst");
+  updateSectionGridEnabled();
   renderTopStats();
   showScreen("top");
 });
