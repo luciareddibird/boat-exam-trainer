@@ -1424,5 +1424,560 @@ window.QUESTIONS = [
   answer:0,
   hint:{en:"Throw a flotation device immediately and never lose sight of the person in the water — losing visual contact is the biggest risk in a man-overboard situation.",
     jp:"直ちに浮力体を投げ入れ、絶対に落水者から目を離さないこと。見失うことが最大のリスクとなる。"}
+},
+
+/* ============ ADDITIONAL SET (from a third exam copy, A-1〜A-8) ============ */
+{
+  id:"n01", category:"general",
+  en:{q:"Of the following descriptions about what you should keep in mind when navigating a boat, which one is INAPPROPRIATE?",
+    choices:[
+      "You need to bear in mind that the boat is more susceptible to changes in weather conditions on water than on land.",
+      "During navigation, you need to focus on operating the helm because submerged obstacles can easily be spotted.",
+      "You need to make sure that you have radio equipment or a mobile phone because, if you do not have one, you will not be able to communicate with land in case of emergency.",
+      "You need to stay on the lookout in a proper manner because other ships can approach your boat from any direction."]},
+  jp:{q:"操船時の心得に関する次の記述のうち、不適切なものはどれか。",
+    choices:[
+      "水上は陸上に比べ天候の変化を受けやすいことを心得ておく必要がある。",
+      "航行中は、水中の障害物を見つけやすいので操舵操作に集中する必要がある。",
+      "無線機や携帯電話がないと緊急時に陸と連絡が取れないため、備えておく必要がある。",
+      "他船はどの方向からでも接近してくるため、適切な見張りを続ける必要がある。"]},
+  answer:1,
+  hint:{en:"Focusing only on steering does not help you spot submerged obstacles — that requires a proper lookout, not helm concentration. The two ideas don't actually connect.",
+    jp:"操舵操作に集中しても水中の障害物は見つけやすくならない。それには適切な見張りが必要であり、論理がかみ合っていない。"}
+},
+{
+  id:"n02", category:"general",
+  en:{q:"Of the following statements that describe the characteristics of a large vessel underway, which one is INAPPROPRIATE?",
+    choices:[
+      "The rudder effectiveness is poor compared to that of a boat. Also, a large vessel is low in maneuverability and cannot stop immediately.",
+      "Since a large vessel has a repulsive effect on a ship approaching its side, a constant distance can be maintained between it and a boat navigating in parallel.",
+      "Since a large vessel is deep-draft, it is limited in water areas where it can navigate, compared to a boat. For example, it cannot navigate in shallow waters.",
+      "A large vessel has a wide dead angle in the bow direction, and it is almost impossible to visually recognize a boat navigating close to the bow."]},
+  jp:{q:"航行中の大型船の特性に関する記述のうち、不適切なものはどれか。",
+    choices:[
+      "大型船は舵の効きが悪く、小回りも利かず、急には止まれない。",
+      "大型船には側方に近づく船を跳ね返す力が働くため、並走する小型船との間は一定の距離を保てる。",
+      "大型船は喫水が深いため、浅瀬など航行できる水域が小型船より限られる。",
+      "大型船は船首方向に広い死角があり、船首近くを航行する小型船を目視で確認するのはほぼ不可能である。"]},
+  answer:1,
+  hint:{en:"Vessels passing close together actually experience interaction (suction) forces that can pull them TOGETHER, not a \"repulsive effect\" that safely maintains distance — this is a real, dangerous phenomenon.",
+    jp:"近接航行する船の間には引き合う「吸引作用」が働くことがあり危険。「反発力で距離が保てる」というのは誤り。"}
+},
+{
+  id:"n03", category:"general",
+  en:{q:"Of the following statements that describe \"diving fishery,\" which one is INAPPROPRIATE?",
+    choices:[
+      "Fishing operations are never conducted by a single person; there is always someone on the boat during operation.",
+      "A boat engaged in a fishing operation may have a code flag put up indicating that there is a diver under water.",
+      "A diver does not necessarily come up at regular intervals and may emerge suddenly.",
+      "A diver is not necessarily under water and may be floating nearby on the surface of the sea."]},
+  jp:{q:"「素潜り漁」に関する記述のうち、不適切なものはどれか。",
+    choices:[
+      "素潜り漁は一人で行われることは決してなく、操業中は必ず船に人がいる。",
+      "潜水中であることを示す信号旗を掲げている漁船もある。",
+      "潜水者は一定間隔で浮上するとは限らず、突然浮上することがある。",
+      "潜水者は常に水中にいるとは限らず、水面近くに浮いていることもある。"]},
+  answer:0,
+  hint:{en:"\"Never\" and \"always\" are too absolute — diving fishery practices vary, and you should never assume a diver's boat is staffed a certain way.",
+    jp:"「決して…ない」「必ず」という言い切りは実態に合わない。素潜り漁の実施形態は一様ではない。"}
+},
+{
+  id:"n04", category:"general",
+  en:{q:"Which of the following is the major cause of an ENGINE FAILURE of a pleasure boat?",
+    choices:["Failure to check the boat position","Improper boat handling","Improper engine handling","Insufficient attention to weather and sea conditions"]},
+  jp:{q:"プレジャーボートの機関故障(運転不能)の主な原因はどれか。",
+    choices:["船位確認の不足","不適切な操船","不適切な機関の取り扱い","気象・海象への注意不足"]},
+  answer:2,
+  hint:{en:"Engine failure is overwhelmingly caused by poor engine maintenance/handling — not to be confused with grounding (poor chart study) or collision (poor lookout).",
+    jp:"機関故障(運転不能)の主な原因は機関の取り扱い不良。乗り揚げ(水路調査不足)や衝突(見張り不足)とは原因が異なる。"}
+},
+{
+  id:"n05", category:"general",
+  en:{q:"Of the following descriptions about what a skipper should keep in mind when navigating the boat he/she owns, which one is APPROPRIATE?",
+    choices:[
+      "When navigating the boat, the skipper should have its Ship Inspection Record Book kept at home.",
+      "The skipper may navigate the boat even if its Ship Inspection Certificate has expired.",
+      "Even if the engine is replaced, the skipper does not need to have the boat inspected as long as the boat underwent a Periodical Inspection.",
+      "The skipper should have all legally required equipment on board."]},
+  jp:{q:"自分の所有する船を航行させる際の心得として適切なものはどれか。",
+    choices:[
+      "航行時は船舶検査記録簿を自宅に置いておくべきである。",
+      "船舶検査証書の有効期限が切れていても航行してよい。",
+      "エンジンを交換しても、定期検査を受けていれば改めて検査を受ける必要はない。",
+      "法定備品をすべて船に備えておくべきである。"]},
+  answer:3,
+  hint:{en:"Carrying all legally required equipment is a basic, unambiguous duty — the other options describe clear violations (expired certificate, record book left behind, skipping required inspection after an engine swap).",
+    jp:"法定備品の完備は基本的な義務。他の選択肢はいずれも明確な違反(証書切れでの航行、記録簿を自宅に放置、機関換装後の検査省略)にあたる。"}
+},
+{
+  id:"n06", category:"general",
+  en:{q:"Of the following statements that describe the mooring and disposal of a boat, which one is APPROPRIATE?",
+    choices:[
+      "In a large river, moorage can be created by freely driving stakes.",
+      "When a boat is moored without permission, it should be moored so as not to interfere with the navigation of any other vessel.",
+      "An unwanted boat may be abandoned anywhere as long as it does not harm the surrounding landscape.",
+      "If you do not know how to dispose of a boat, you should contact the local municipality or marina."]},
+  jp:{q:"船の係留・処分に関する記述のうち、適切なものはどれか。",
+    choices:[
+      "大きな河川では、自由に杭を打って係留場所を作ってよい。",
+      "無許可で係留する場合は、他の船の航行の妨げにならないようにすればよい。",
+      "不要な船は、景観を損なわない限りどこに放置してもよい。",
+      "船の処分方法が分からない場合は、地方自治体やマリーナに相談するとよい。"]},
+  answer:3,
+  hint:{en:"When in doubt about disposing of a boat, ask your local municipality or marina — they can point you to proper (often FRP-recycling) channels.",
+    jp:"処分方法が分からなければ、まず地方自治体やマリーナに相談するのが適切。"}
+},
+{
+  id:"n07", category:"general",
+  en:{q:"Which of the following is the most important thing that the skipper of a boat should let his/her family and the marina know before departure?",
+    choices:["Water area to be navigated","Engine output","Amount of fuel on board","Type of permit"]},
+  jp:{q:"出航前に船長が家族やマリーナに伝えておくべき最も重要なことはどれか。",
+    choices:["航行する水域","エンジンの出力","搭載燃料の量","免許の種類"]},
+  answer:0,
+  hint:{en:"If you go overdue, searchers need to know WHERE you planned to be — the intended water area/route is the single most critical piece of information to leave behind.",
+    jp:"もし帰航が遅れた場合、捜索のためには「どこを航行する予定だったか」が最も重要な情報となる。"}
+},
+{
+  id:"n08", category:"general",
+  en:{q:"Which of the following is INAPPROPRIATE as an action that you should take if an accident occurs at sea?",
+    choices:[
+      "If you are in need of rescue, you should send a distress signal to ask nearby vessels for help.",
+      "When asking for help, you should give the rescuer accurate information about where your vessel is and how the accident occurred.",
+      "If you fall overboard, you should take off your clothes so as to have more freedom of movement and swim toward the shore with all of your energy.",
+      "If you spot the accident of another vessel, you should go to its rescue unless your own vessel is in danger."]},
+  jp:{q:"海上で事故が発生した場合の行動として不適切なものはどれか。",
+    choices:[
+      "救助が必要な場合は、遭難信号を発して近くの船に助けを求める。",
+      "助けを求める際は、自船の位置や事故の状況を正確に伝える。",
+      "海に落ちた場合は、動きやすいよう衣服を脱ぎ全力で岸まで泳ぐ。",
+      "他船の事故を発見した場合、自船に危険が及ばない限り救助に向かう。"]},
+  answer:2,
+  hint:{en:"Keep your clothes on for buoyancy/warmth and conserve energy while signaling for help, rather than exhausting yourself swimming.",
+    jp:"衣服は浮力や保温のため着たままにし、全力で泳ぐのではなく体力を温存して救助を待つのが基本。"}
+},
+{
+  id:"n09", category:"general",
+  en:{q:"The skipper of a boat must keep a good lookout at all times by using all the means appropriate for the circumstances. Which of the following is an INAPPROPRIATE means? (Law for Boat's Operators)",
+    choices:["Using binoculars to see far","Concentrating on the lookout forward as it becomes dark","Listening with attention because visibility is poor","Using the radar to check the situation around the boat at regular intervals"]},
+  jp:{q:"船長は状況に適したあらゆる手段で常時適切な見張りをしなければならない。次のうち不適切な手段はどれか。(小型船舶操縦者法)",
+    choices:["遠くを見るために双眼鏡を使う。","暗くなってきたら前方の見張りに集中する。","視界が悪いときは注意深く聴く。","定期的にレーダーで周囲の状況を確認する。"]},
+  answer:1,
+  hint:{en:"Narrowing your attention to forward-only, especially as it gets dark, neglects all-around awareness — a proper lookout must cover every direction, not just ahead.",
+    jp:"見張りは全方位が基本。暗くなったからといって前方だけに集中するのは不適切。"}
+},
+{
+  id:"n10", category:"general",
+  en:{q:"Of the following descriptions about the handling of the permit of boat's operator, which one is WRONG? (Law for Boat's Operators)",
+    choices:[
+      "The permit of boat's operator must not be lent or transferred to his/her own family.",
+      "When boarding a boat as the skipper, you must keep the permit of boat's operator in the boat.",
+      "When your name has changed, you must apply for the correction of the permit of boat's operator.",
+      "When the permit of boat's operator expires after its 10-year validity period, you must return it to the government."]},
+  jp:{q:"操縦免許証の取り扱いに関する記述のうち、誤っているものはどれか。(小型船舶操縦者法)",
+    choices:[
+      "操縦免許証は家族であっても貸し借りしてはならない。",
+      "船長として乗船するときは、操縦免許証を船に備えなければならない。",
+      "氏名が変わったときは、記載事項の訂正を申請しなければならない。",
+      "有効期間(5年)が切れたときは、国に返納しなければならない。"]},
+  answer:3,
+  hint:{en:"An expired license just becomes invalid — there's no requirement to physically return it; you renew it instead.",
+    jp:"免許の有効期間が切れても返納義務はなく、更新手続きを行えばよい。"}
+},
+{
+  id:"n11", category:"general",
+  en:{q:"Of the following statements that describe how to calculate the maximum number of persons (aged 1 and above) allowed on board a boat not used for international voyage, which one is CORRECT? (Ship Safety Law)",
+    choices:["Children aged between 1 and 11 years are counted as one person for every two.","Children aged between 1 and 13 years are counted as one person for every two.","Children aged between 1 and 15 years are counted as one person for every two.","Children aged between 1 and 17 years are counted as one person for every two."]},
+  jp:{q:"国際航海に従事しない船の定員(1歳以上)の算定方法として正しいものはどれか。(船舶安全法)",
+    choices:["1歳から11歳までの子供は2人で大人1人として数える。","1歳から13歳までの子供は2人で大人1人として数える。","1歳から15歳までの子供は2人で大人1人として数える。","1歳から17歳までの子供は2人で大人1人として数える。"]},
+  answer:0,
+  hint:{en:"For capacity purposes, children aged 1–11 count as half a person each (two children = one adult); 12 and up count as a full person.",
+    jp:"定員算定では1〜11歳の子供は2人で大人1人分として数える。12歳以上は大人と同じ1人として数える。"}
+},
+{
+  id:"n12", category:"general",
+  en:{q:"Of the following statements that describe the impact of oil and litter on the sea, which one is INAPPROPRIATE?",
+    choices:[
+      "Litter dumped in the sea will eventually drift to the coast and deteriorate the landscape.",
+      "Plastic litter dumped in the sea adversely affects the marine ecosystem.",
+      "Oil discharged into the ocean is decomposed by microorganisms and becomes a nutrient source for marine organisms.",
+      "Ropes and fishing lines dumped in the sea are entangled with marine life and cause damage."]},
+  jp:{q:"海への油・ゴミの影響に関する記述のうち、不適切なものはどれか。",
+    choices:[
+      "海に捨てられたゴミは、やがて海岸に漂着し景観を損なう。",
+      "海に捨てられたプラスチックごみは海洋生態系に悪影響を及ぼす。",
+      "海に排出された油は微生物に分解され、海洋生物の栄養源になる。",
+      "海に捨てられたロープや釣り糸は海洋生物に絡みつき被害を与える。"]},
+  answer:2,
+  hint:{en:"Discharged oil is a pollutant that harms marine life — it is not a beneficial \"nutrient source,\" regardless of eventual microbial breakdown.",
+    jp:"排出された油は海洋生物に害を与える汚染物質であり、「栄養源になる」というのは誤り。"}
+},
+
+{
+  id:"n14", category:"rules",
+  en:{q:"Which of the following is correct as the navigation rule to be observed when vessel A underway overtakes vessel B (a sailing vessel), as shown in the figure?",
+    choices:["Vessel A must navigate while getting as close to vessel B as possible.","Vessel B must navigate with due caution while keeping its course and speed.","Vessel A must navigate with its sail shortened early.","Vessel B must suspend fishing operations and stop."]},
+  jp:{q:"動力船Aが帆船Bを追い越す場合の航法として正しいものはどれか。",
+    choices:["A船はできるだけB船に接近して航行しなければならない。","B船は注意しながら針路・速力を保たなければならない。","A船は早めに帆を縮めて航行しなければならない。","B船は漁ろうを中断して停止しなければならない。"]},
+  diagram:{boats:[{x:100,y:140,angle:0,label:"A",type:"power"},{x:100,y:55,angle:0,label:"B",type:"sail"}]},
+  answer:1,
+  hint:{en:"The overtaking rule applies regardless of vessel type — the vessel being overtaken simply keeps its course and speed while the overtaking vessel keeps clear.",
+    jp:"追越しの規定は船の種類にかかわらず適用される。追い越される船は針路・速力を保ち、追い越す船が避ける。"}
+},
+{
+  id:"n15", category:"rules",
+  en:{q:"Two power-driven vessels underway cross each other's course with a risk of collision near the position marked X. Which of the following give-way actions must NOT be taken by vessel A unless absolutely necessary?",
+    choices:["To cross astern of vessel B","To cross ahead of vessel B","To alter course to port","To operate astern propulsion"]},
+  jp:{q:"2隻の動力船が×印付近で衝突のおそれがある横切りの状況にある場合、A船が絶対に必要な場合を除きとってはならない避航動作はどれか。",
+    choices:["B船の船尾側を通過する。","B船の船首側を横切る。","左転する。","後進をかける。"]},
+  diagram:{boats:[{x:60,y:140,angle:30,label:"A",type:"power"},{x:150,y:60,angle:250,label:"B",type:"power"}],mark:{x:100,y:100}},
+  answer:1,
+  hint:{en:"A give-way vessel should pass astern of the other vessel, not cut across ahead of her bow — crossing ahead risks a collision if your judgment of her speed or course is even slightly off.",
+    jp:"避航船は相手船の船首を横切らず、船尾側を通過するのが原則。船首側を横切るのは判断を誤ると衝突につながり危険。"}
+},
+{
+  id:"n17", category:"rules",
+  en:{q:"Two vessels underway, A and B, risk colliding near the position marked X. In which of the following combinations is vessel B the GIVE-WAY vessel?",
+    choices:[
+      "B: Vessel not under command / A: Power-driven vessel",
+      "B: Vessel not under command / A: Sailing vessel",
+      "B: Power-driven vessel / A: Vessel engaged in fishing",
+      "B: Vessel engaged in fishing / A: Sailing vessel"]},
+  jp:{q:"2隻の船A・Bが×印付近で衝突のおそれがある場合、次の組み合わせのうちB船が避航船となるのはどれか。",
+    choices:[
+      "B:運転不自由船／A:動力船",
+      "B:運転不自由船／A:帆船",
+      "B:動力船／A:漁ろうに従事する船舶",
+      "B:漁ろうに従事する船舶／A:帆船"]},
+  answer:2,
+  hint:{en:"Right-of-way priority (lowest to highest): power-driven < sailing < fishing < not under command. B must give way only when B has lower priority than A — that happens only when B is the ordinary power-driven vessel facing a fishing vessel A.",
+    jp:"優先順位(低い順): 動力船＜帆船＜漁ろう船＜運転不自由船。B船の方が優先順位が低い組み合わせのときだけB船が避航船になる。該当するのは「B=動力船／A=漁ろう船」のみ。"}
+},
+{
+  id:"n19", category:"rules",
+  en:{q:"When proceeding along the course of a narrow channel or fairway, how must a vessel navigate as much as practicable? (Law for Preventing Collisions at Sea)",
+    choices:["The vessel must navigate close to the starboard side of the narrow channel or fairway.","The vessel must navigate in the center of the narrow channel or fairway.","The vessel must navigate close to the port side of the narrow channel or fairway.","The vessel must navigate at a speed at which the rudder is effective."]},
+  jp:{q:"狭い水道や航路筋に沿って航行する場合、できる限りどのように航行しなければならないか。(海上衝突予防法)",
+    choices:["水道や航路筋の右側端に寄って航行する。","水道や航路筋の中央を航行する。","水道や航路筋の左側端に寄って航行する。","舵の効く速力で航行する。"]},
+  answer:0,
+  hint:{en:"Rule 9(a): a vessel proceeding along a narrow channel must keep as near the outer limit on her STARBOARD side as is safe and practicable — like keeping to the right.",
+    jp:"規則9条(a):狭い水道では、安全かつ実行可能な限り、水道の右側端に寄って航行しなければならない。"}
+},
+{
+  id:"n20", category:"rules",
+  en:{q:"Of the following combinations of a type of legally required light and its color, which one is CORRECT?",
+    choices:["Masthead light --- Yellow","Starboard sidelight --- White","Port sidelight --- Red","Sternlight --- Green"]},
+  jp:{q:"灯火の種類と色の組み合わせとして正しいものはどれか。",
+    choices:["マスト灯 --- 黄色","右舷灯 --- 白色","左舷灯 --- 赤色","船尾灯 --- 緑色"]},
+  answer:2,
+  hint:{en:"Port sidelight = red is the one correct pairing here. Masthead and sternlight are both white; starboard sidelight is green, not white.",
+    jp:"左舷灯=赤が正しい組み合わせ。マスト灯・船尾灯はともに白、右舷灯は緑であり、ここに挙げられた他の組み合わせは誤り。"}
+},
+{
+  id:"n21", category:"rules",
+  en:{q:"When a power-driven vessel underway engaged in a towing operation exhibits the single diamond shape during the day, for how many meters must the distance from the stern of the power-driven vessel to the rear end of the tow EXCEED for this shape to be required? (Law for Preventing Collisions at Sea)",
+    choices:["20 meters","50 meters","100 meters","200 meters"]},
+  jp:{q:"引き船作業中の動力船が昼間にひし形の形象物1個を掲げるのは、船尾から引き船列の後端までの距離が何メートルを超える場合か。(海上衝突予防法)",
+    choices:["20メートル","50メートル","100メートル","200メートル"]},
+  answer:3,
+  hint:{en:"Rule 24: a diamond shape is required only when the length of the tow exceeds 200 meters.",
+    jp:"規則24条:引き船列の長さが200メートルを超える場合に、ひし形の形象物を掲げる必要がある。"}
+},
+{
+  id:"n22", category:"rules",
+  en:{q:"In which of the following cases is it NOT required for a power-driven vessel underway to give any whistle signal? (Law for Preventing Collisions at Sea)",
+    choices:["When the vessel is operating astern propulsion to give way to another vessel on its way","When the vessel is altering course to avoid a floating object on its way","When the vessel is approaching a bend of a narrow channel where other vessels may not be seen","When the vessel is overtaking another vessel in a narrow channel"]},
+  jp:{q:"航行中の動力船が、汽笛信号を行う必要がないのは次のうちどれか。(海上衝突予防法)",
+    choices:[
+      "進路上の他船を避けるため、後進をかけるとき。",
+      "進路上の浮遊物を避けるため、針路を変えるとき。",
+      "狭い水道で、他船を見通せない湾曲部に接近するとき。",
+      "狭い水道で他船を追い越すとき。"]},
+  answer:1,
+  hint:{en:"The whistle-signal rule (Rule 34) covers maneuvers taken under the Steering and Sailing Rules to avoid another VESSEL. Altering course for a floating OBJECT isn't a COLREG vessel-avoidance maneuver, so no signal is required.",
+    jp:"汽笛信号(規則34条)は、航法規則に基づき他船を避けるための動作に対して必要。浮遊物(船ではない物)を避ける単なる針路変更には信号は不要。"}
+},
+{
+  id:"n23", category:"rules",
+  en:{q:"Vessels A and B are navigating within a port near a breakwater, as shown in the figure. Which of the following is correct as the navigation rule to be observed? (Port Regulations Law)",
+    choices:["Both vessels A and B must navigate away from the breakwater.","Vessel A must navigate away from the breakwater, and vessel B must navigate close to it.","The vessel navigating at higher speed must give way to the other.","Vessel A must navigate close to the breakwater, and vessel B must navigate away from the breakwater."]},
+  jp:{q:"港内の防波堤付近をA船・B船が航行している場合の航法として正しいものはどれか。(港則法)",
+    choices:[
+      "A船・B船とも防波堤から離れて航行する。",
+      "A船は防波堤から離れ、B船は防波堤に近寄って航行する。",
+      "速力の速い方の船が避ける。",
+      "A船は防波堤に近寄り、B船は防波堤から離れて航行する。"]},
+  answer:3,
+  hint:{en:"Near a breakwater entrance, a vessel leaving port keeps close to the breakwater while a vessel entering keeps away from it, to maintain safe separation where visibility around the breakwater is limited.",
+    jp:"防波堤の入口付近では、出航する船は防波堤に近寄り、入航する船は防波堤から離れて航行するのが原則。"}
+},
+{
+  id:"n24", category:"rules",
+  en:{q:"(NOTE: \"Launch, etc.\" means a power-driven vessel under 20 gross tonnage, a barge, a boat, or a vessel operated mainly by oars/paddles.) When a Launch, etc. meets another vessel that is NOT a Launch, etc. head-on within a port, and there is a risk of collision, which of the following is correct as the navigation rule to be observed? (Port Regulations Law)",
+    choices:["Both vessels must alter course to starboard.","The Launch, etc. must give way to the other vessel that is not a Launch, etc.","Both vessels must alter course to port.","The other vessel that is not a Launch, etc. must give way to the Launch, etc."]},
+  jp:{q:"(注:「汽艇等」とは総トン数20トン未満の動力船、はしけ、ボート、主にオールで運転する船をいう。) 港内で汽艇等が汽艇等以外の船舶と行き会い、衝突のおそれがある場合の航法として正しいものはどれか。(港則法)",
+    choices:["両船とも右転する。","汽艇等が、汽艇等以外の船舶の進路を避ける。","両船とも左転する。","汽艇等以外の船舶が、汽艇等の進路を避ける。"]},
+  answer:1,
+  hint:{en:"Within a port, a small \"Launch, etc.\" must generally give way to larger, non-Launch vessels.",
+    jp:"港内では、汽艇等は汽艇等以外の(より大きな)船舶の進路を避けなければならないのが原則。"}
+},
+{
+  id:"n26", category:"rules",
+  en:{q:"Of the following statements concerning a prefectural Water Safety Ordinance, which one is CORRECT?",
+    choices:[
+      "There are water areas in which a sign uniquely prescribed by the prefectural government is put up pursuant to an ordinance.",
+      "The Maritime Bureau of the Ministry of Land, Infrastructure, Transport and Tourism enforces regulations on those who violate the ordinance.",
+      "No penalty such as a fine is imposed even if the ordinance is violated.",
+      "This kind of ordinance has been enacted only in two specific prefectures."]},
+  jp:{q:"水上安全条例に関する記述のうち、正しいものはどれか。",
+    choices:[
+      "条例に基づき、都道府県独自の標識が設置されている水域がある。",
+      "条例違反者への取り締まりは国土交通省の地方運輸局(海事局)が行う。",
+      "条例に違反しても罰金などの罰則は科されない。",
+      "この種の条例は特定の2県でしか制定されていない。"]},
+  answer:0,
+  hint:{en:"Prefectural ordinances can establish their own locally-prescribed signage; enforcement is a local/prefectural matter (not the national Maritime Bureau), violations do carry penalties, and such ordinances exist widely, not in just two prefectures.",
+    jp:"条例に基づき都道府県独自の標識を設置できる。取り締まりは地方(都道府県)が行い、違反には罰則があり、同種の条例は各地にある。"}
+},
+
+{
+  id:"n28", category:"operation",
+  en:{q:"When a boat is to be moored to a quay while receiving wind from the bow direction, which of the following describes the most appropriate priority for tying mooring ropes?",
+    choices:[
+      "Tie whichever rope is most convenient first; order does not matter.",
+      "Tie a bow line or forward spring line first, to stop the bow from being blown off the quay.",
+      "Tie the stern line first, regardless of wind direction.",
+      "Wait until all ropes can be tied simultaneously before securing any of them."]},
+  jp:{q:"船首方向から風を受けながら岸壁に係留する場合、ロープを結ぶ優先順位として最も適切なものはどれか。",
+    choices:[
+      "どのロープからでもよく、順序は関係ない。",
+      "船首が岸壁から離されないよう、バウラインまたは船首スプリングラインを最初に結ぶ。",
+      "風向きに関わらず、まずスターンライン(船尾索)を結ぶ。",
+      "すべてのロープを同時に結べるようになるまで待つ。"]},
+  answer:1,
+  hint:{en:"With wind pushing from the bow, the bow is what's at risk of being blown off the quay first — secure it (bow line / forward spring) before anything else.",
+    jp:"船首方向からの風では船首が岸壁から離されやすいため、まず船首側のロープを結んで固定するのが基本。"}
+},
+{
+  id:"n30", category:"operation",
+  en:{q:"Which of the following is APPROPRIATE as an action that you should take if you encounter dense fog while navigating along a coast?",
+    choices:["To keep the engine ready for immediate maneuver","To navigate as close to the shore as possible to make it easy to check the position of the vessel","To operate the vessel without removing your eyes from the compass so as to keep course","To navigate with all the lights in the vessel on"]},
+  jp:{q:"沿岸を航行中に濃霧に遭遇した場合の行動として適切なものはどれか。",
+    choices:[
+      "直ちに機敏な操作ができるよう機関をいつでも使える状態にしておく。",
+      "船位を確認しやすいよう、できるだけ岸に近づいて航行する。",
+      "針路を保つため、コンパスから目を離さずに操船する。",
+      "船内のすべての灯火をつけて航行する。"]},
+  answer:0,
+  hint:{en:"Keeping the engine ready lets you respond instantly if a hazard suddenly appears out of the fog — hugging the shore, fixating only on the compass, or lighting up the whole boat don't help and can even add risk.",
+    jp:"機関をいつでも使える状態にしておけば、霧の中で突然現れた危険にも即座に対応できる。岸に近寄りすぎる、コンパスだけを見続ける、船内の灯りを全てつけるのは適切でない。"}
+},
+{
+  id:"n31", category:"operation",
+  en:{q:"Of the following descriptions about what you should keep in mind when towing water skis or a wakeboard with a boat, which one is INAPPROPRIATE?",
+    choices:[
+      "Water skis or a wakeboard should be towed in a sufficiently wide water area, regardless of the skill of the player.",
+      "The lookout of the player should be kept by a fellow passenger, and the operator should concentrate ONLY on the lookout forward.",
+      "Towing should not be conducted in a water area where vessels frequently navigate or obstacles are present.",
+      "Predetermined gestures should be used to communicate with the player."]},
+  jp:{q:"水上スキーやウェイクボードを引く際の注意点として不適切なものはどれか。",
+    choices:[
+      "プレーヤーの技量にかかわらず、十分広い水域で曳航する。",
+      "プレーヤーの見張りは同乗者が行い、操縦者は前方の見張りのみに専念すればよい。",
+      "船の往来が多い水域や障害物がある水域では曳航しない。",
+      "プレーヤーとの合図はあらかじめ決めておく。",
+      ]},
+  answer:1,
+  hint:{en:"The operator must still keep broad situational awareness, not just a fixed forward-only lookout — a dedicated spotter watches the player, but that doesn't mean the operator can ignore everything except straight ahead.",
+    jp:"見張り役が同乗者にいても、操縦者が「前方のみ」に限定してよいわけではなく、周囲全体への注意が必要。"}
+},
+{
+  id:"n32", category:"operation",
+  en:{q:"The figure at the right shows a part of a compass rose with True north and Magnetic north arrows forming a V, with Magnetic north pointing to the left (west) of True north. Which of the following is the correct explanation of this relationship?",
+    choices:["The variation is easterly.","The variation is westerly.","The deviation is easterly.","The deviation is westerly."]},
+  jp:{q:"コンパスローズの一部を示す図で、真北と磁北の矢印がVの字を描いており、磁北が真北より左(西)側を指している。この関係の説明として正しいものはどれか。",
+    choices:["偏差は東寄りである。","偏差は西寄りである。","自差は東寄りである。","自差は西寄りである。"]},
+  answer:1,
+  hint:{en:"\"Variation\" is the term for the true-vs-magnetic-north difference printed on a chart; magnetic north lying to the west of true north is called a westerly variation. (\"Deviation\" refers to a specific ship's own compass error, not this chart relationship.)",
+    jp:"海図上の真北と磁北のずれは「偏差」と呼ぶ。磁北が真北より西側にあるので「西偏」。「自差」は個々の船のコンパス特有の誤差で、この関係とは別物。"}
+},
+{
+  id:"n33", category:"operation",
+  en:{q:"How many nautical miles are equal to 9,260 meters? Choose the correct answer from the following:",
+    choices:["Approx. 2.5 nautical miles","Approx. 5 nautical miles","Approx. 10 nautical miles","Approx. 17 nautical miles"]},
+  jp:{q:"9,260メートルは約何海里に相当するか。",
+    choices:["約2.5海里","約5海里","約10海里","約17海里"]},
+  answer:1,
+  hint:{en:"1 nautical mile = 1,852 meters. 9,260 ÷ 1,852 = exactly 5 nautical miles.",
+    jp:"1海里=1,852メートル。9,260 ÷ 1,852 = ちょうど5海里。"}
+},
+{
+  id:"n34", category:"operation",
+  en:{q:"According to Japan's buoyage system, a light buoy with a single red topmark and red coloring indicates that there is an obstacle, such as a reef, shoal, or sunken wreck, in which position relative to the buoy when a vessel enters port?",
+    choices:["To the right of the buoy","To the left of the buoy","Directly ahead of the buoy, regardless of direction","Only behind the buoy when leaving port"]},
+  jp:{q:"日本の航路標識の体系において、頭標・本体ともに赤色の灯浮標は、入港する船から見てどちら側に障害物(岩礁・浅瀬・沈船など)があることを示すか。",
+    choices:["灯浮標の右側","灯浮標の左側","方向に関わらず灯浮標の正面","出航時のみ、灯浮標の後方"]},
+  answer:0,
+  hint:{en:"A red-marked buoy signals that the hazard lies to the right of the buoy as you proceed into port — keep the buoy on your port (left) side to stay clear of it.",
+    jp:"赤色の灯浮標は、入港時にその右側に障害物があることを示す。灯浮標を左舷(進行方向左側)に見て航行し、障害物を避ける。"}
+},
+{
+  id:"n35", category:"operation",
+  en:{q:"A light shows a repeating group of several short flashes within each period, with a longer dark gap between groups. Which light abbreviation matches this pattern?",
+    choices:["Oc(2) — group occulting twice","F — fixed (continuous)","Fl(2) — group flashing twice","Al — alternating"]},
+  jp:{q:"1周期の中で短い閃光が複数回まとまって現れ、その後に長い消灯区間が続く灯質パターンを表す記号はどれか。",
+    choices:["Oc(2) — 等明暗光(2)","F — 不動光","Fl(2) — 群閃光(2)","Al — 互光"]},
+  answer:2,
+  hint:{en:"A group of brief flashes followed by a longer dark period is \"group flashing\" (Fl) — the opposite of \"F\" (fixed/continuous) and different from \"Oc\" (mostly lit, with brief eclipses).",
+    jp:"短い閃光がまとまって現れ、その後長く消灯するのは「群閃光(Fl)」の特徴。常時点灯する「F(不動光)」や、点灯時間の方が長い「Oc(明暗光)」とは異なる。"}
+},
+{
+  id:"n37", category:"operation",
+  en:{q:"Which of the following is represented by nautical chart symbol \"2kn →\" (a plain, unfeathered arrow with a speed value)?",
+    choices:["Ocean current","Flood tide stream","Ebb tide stream","Overfalls"]},
+  jp:{q:"海図記号「2kn →」(羽根の無い単純な矢印に速度を付したもの)が表すものはどれか。",
+    choices:["海流","上げ潮流","下げ潮流","タイドレース(潮目の乱れ)"]},
+  answer:0,
+  hint:{en:"A plain, unfeathered arrow with a speed label denotes an ocean/surface current. Tidal stream arrows (flood/ebb) are drawn with distinguishing feathers to tell the two directions apart.",
+    jp:"羽根の無い単純な矢印に速度を付したものは海流を表す。上げ潮流・下げ潮流は、向きを区別するための羽根付き矢印で表される。"}
+},
+{
+  id:"n38", category:"operation",
+  en:{q:"Which of the following best describes an OUTBOARD engine installation?",
+    choices:[
+      "The engine and drive unit are mounted together as a single external unit on the transom, outside the hull.",
+      "The engine is mounted inside the hull, with only the drive (outdrive) unit protruding through the transom.",
+      "The engine is mounted inside the hull, driving a shaft and propeller fixed under the hull.",
+      "The engine is mounted inside the hull, driving a water-jet propulsion unit."]},
+  jp:{q:"「船外機」の取り付け方の説明として最も適切なものはどれか。",
+    choices:[
+      "エンジンとドライブユニットが一体となって、船体外側のトランサムに取り付けられている。",
+      "エンジンは船内にあり、ドライブ(アウトドライブ)部分のみがトランサムを貫通して外に出ている。",
+      "エンジンは船内にあり、シャフトを介して船底のプロペラを駆動する。",
+      "エンジンは船内にあり、ウォータージェット推進装置を駆動する。"]},
+  answer:0,
+  hint:{en:"\"Outboard\" means the whole engine+drive unit sits entirely OUTSIDE the hull, clamped to the transom — unlike inboard-outdrive (engine inside, drive outside) or straight inboard (engine and shaft both inside).",
+    jp:"「船外機」はエンジンとドライブが一体のまま船体の外(トランサム)に取り付けられる方式。エンジンが船内にある船内外機・船内機とは異なる。"}
+},
+{
+  id:"n40", category:"operation",
+  en:{q:"The items below are inspected before departure. In which of the following cases is it INAPPROPRIATE for the vessel to depart with the item in the condition described?",
+    choices:["The expiration date of the hand flare is not overdue.","The bottom plug is tightened.","Lifebuoys are stored in the hold of the vessel.","The air vent screw of the fuel tank is open."]},
+  jp:{q:"出航前点検に関して、その状態で出航するのが不適切なものはどれか。",
+    choices:["信号紅炎の使用期限が切れていない。","ボトムプラグ(排水栓)が締まっている。","救命浮環が船倉に収納されている。","燃料タンクの空気抜きねじが開いている。"]},
+  answer:2,
+  hint:{en:"Lifebuoys must be readily accessible on deck for immediate use in an emergency — storing them away in the hold defeats their purpose.",
+    jp:"救命浮環は緊急時すぐ使えるよう甲板上などすぐ取れる場所に置くべきで、船倉にしまい込むのは不適切。"}
+},
+{
+  id:"n41", category:"operation",
+  en:{q:"In a gasoline engine's fuel system, fuel flows in this order: Fuel tank → (A) → Fuel cock → Carburetor. Which of the following is the correct role of component (A), the fuel pump?",
+    choices:["To create a mixture of mist of fuel oil and air","To open and close the fuel passage","To feed fuel oil to the engine","To remove dirt and water from fuel oil"]},
+  jp:{q:"ガソリンエンジンの燃料系統は「燃料タンク→(A)→燃料コック→キャブレター」の順になっている。(A)(燃料ポンプ)の役割として正しいものはどれか。",
+    choices:["燃料と空気を混合し霧状にする。","燃料通路を開閉する。","エンジンに燃料を送る。","燃料中のゴミや水分を取り除く。"]},
+  answer:2,
+  hint:{en:"The fuel pump's job is simply to feed/push fuel onward toward the engine. Mixing fuel with air is the carburetor's role, and opening/closing the passage is the fuel cock's role.",
+    jp:"燃料ポンプの役割は燃料をエンジンへ送り込むこと。霧状にするのはキャブレター、通路の開閉は燃料コックの役割。"}
+},
+{
+  id:"n43", category:"operation",
+  en:{q:"Which meter indicates the completion of the engine warm-up operation? Choose the most appropriate one from the options below.",
+    choices:["Voltmeter (VOLT)","Ammeter (AMP)","Oil pressure gauge (OIL, kg/cm²)","Water temperature gauge (TEMP, °C)"]},
+  jp:{q:"エンジンの暖機運転が完了したことを示すメーターはどれか。最も適切なものを選べ。",
+    choices:["電圧計(VOLT)","電流計(AMP)","油圧計(OIL、kg/cm²)","水温計(TEMP、°C)"]},
+  answer:3,
+  hint:{en:"Warm-up is complete once the engine reaches its proper operating temperature — read from the water temperature gauge.",
+    jp:"暖機運転の完了は、エンジンが適正な運転温度に達したかどうかで判断する。水温計で確認する。"}
+},
+{
+  id:"n44", category:"operation",
+  en:{q:"Which of the following is INAPPROPRIATE as a cause of a drop in engine oil pressure during the operation of a four-stroke engine?",
+    choices:["The oil filter is clogged.","The engine oil is too new.","The amount of engine oil is low.","Water is mixed with the engine oil."]},
+  jp:{q:"4ストロークエンジン運転中に油圧が低下する原因として不適切なものはどれか。",
+    choices:["オイルフィルターの目詰まり。","エンジンオイルが新しすぎること。","エンジンオイルの量が少ないこと。","エンジンオイルに水が混入していること。"]},
+  answer:1,
+  hint:{en:"Oil being \"too new\" is not a real cause of low pressure — fresh oil of the correct grade works fine. Low oil level, contamination, and filter clogging are the genuine causes.",
+    jp:"オイルが新しいこと自体は油圧低下の原因にならない。油量不足・水の混入・フィルター目詰まりが実際の原因となる。"}
+},
+{
+  id:"n45", category:"operation",
+  en:{q:"Of the following statements that describe what you should do before long-term storage of a vessel, which one is APPROPRIATE?",
+    choices:[
+      "Fill the cooling water system with clear water so as to prevent rusting due to water vapor.",
+      "Store the battery with the cable disconnected and the battery fluid removed.",
+      "Wash dirt off the outer surface of the main body of the engine and spray an antirust agent where necessary.",
+      "Fill the fuel tank with engine oil so as to prevent its interior from rusting."]},
+  jp:{q:"長期保管前の整備として適切なものはどれか。",
+    choices:[
+      "水蒸気によるサビを防ぐため、冷却水系統を真水で満たしておく。",
+      "バッテリーは配線を外し、バッテリー液を抜いて保管する。",
+      "エンジン本体の外側の汚れを洗い流し、必要に応じて防錆剤を吹き付ける。",
+      "燃料タンクの内部のサビを防ぐため、タンクをエンジンオイルで満たしておく。"]},
+  answer:2,
+  hint:{en:"Cleaning the exterior and applying anti-rust treatment is sound, standard maintenance before storage. Removing battery electrolyte ruins the battery, and filling a fuel tank with engine oil makes no sense.",
+    jp:"外装の洗浄と防錆処理は保管前の健全な整備。バッテリー液を抜くとバッテリーを傷め、燃料タンクをエンジンオイルで満たすのも誤り。"}
+},
+{
+  id:"n46", category:"operation",
+  en:{q:"On a surface weather chart, which of the following locations is most likely to experience a gale (strong wind)?",
+    choices:["Where the isobars are spaced very closely together","Where the isobars are spaced far apart","Exactly at the center of a high-pressure system","In the calm area between two weather systems, away from any isobars"]},
+  jp:{q:"地上天気図において、強風(しけ)が発生しやすいのは次のうちどこか。",
+    choices:["等圧線の間隔が非常に狭いところ","等圧線の間隔が広いところ","高気圧の中心付近","等圧線から離れた2つの気圧系の間の穏やかな区域"]},
+  answer:0,
+  hint:{en:"Closely spaced isobars mean a steep pressure gradient, which drives strong wind — the tighter the spacing, the stronger the expected wind.",
+    jp:"等圧線の間隔が狭いほど気圧傾度が急で、強い風が吹きやすい。"}
+},
+{
+  id:"n47", category:"operation",
+  en:{q:"Of the following statements concerning waves, which one is INAPPROPRIATE?",
+    choices:[
+      "The wave direction refers to the direction toward which waves are heading.",
+      "Chopping waves may form when multiple waves with different traveling directions collide.",
+      "Surf may form by wind waves and swells where the water depth is shallow near the coast.",
+      "Huge waves may form even near the shore if weather conditions suddenly change."]},
+  jp:{q:"波に関する記述のうち、不適切なものはどれか。",
+    choices:[
+      "波向とは、波が向かっていく方向のことをいう。",
+      "進行方向の異なる複数の波がぶつかると、三角波が発生することがある。",
+      "海岸近くの浅い水域では、風浪やうねりにより磯波(サーフ)が発生することがある。",
+      "天候が急変すると、海岸近くでも大波が発生することがある。"]},
+  answer:0,
+  hint:{en:"By convention (like wind direction), wave direction refers to where the waves are coming FROM, not where they are heading to.",
+    jp:"波向は(風向と同様に)波が「来る」方向を指すのが慣例であり、「向かっていく方向」とするのは誤り。"}
+},
+{
+  id:"n48", category:"operation",
+  en:{q:"Of the following statements concerning tides, which one is WRONG?",
+    choices:[
+      "The tidal heights of two successive high tides (or low tides) on the same day are the same.",
+      "The time interval between two successive high tides (or low tides) is not constant.",
+      "The time interval between two successive high or low tides may sometimes occur only once a day.",
+      "The difference in the tidal height between a high tide and the succeeding low tide becomes great during a new moon or full moon."]},
+  jp:{q:"潮汐に関する記述のうち、誤っているものはどれか。",
+    choices:[
+      "同じ日の2回の満潮(または干潮)の潮位は同じである。",
+      "連続する満潮(または干潮)の時間間隔は一定ではない。",
+      "1日に満潮(または干潮)が1回しか起こらないこともある。",
+      "新月や満月のころは、満潮と干潮の潮位差が大きくなる。"]},
+  answer:0,
+  hint:{en:"Diurnal inequality means two high tides (or two low tides) on the same day are often DIFFERENT heights, not the same.",
+    jp:"日潮不等により、同じ日の2回の満潮(または干潮)の潮位は異なることが多く、「同じ」というのは誤り。"}
+},
+{
+  id:"n49", category:"operation",
+  en:{q:"Of the following descriptions about what you should keep in mind when navigating in heavy weather, which one is INAPPROPRIATE?",
+    choices:[
+      "Cargo should be fixed so that it does not move as the vessel rolls and pitches.",
+      "A sharp turn should be avoided when a lot of cargo is on board.",
+      "When waves are high, the course should be adjusted so as to avoid receiving broadside waves.",
+      "The course and speed should be adjusted so that the rolling period of the vessel is synchronized with the wave period."]},
+  jp:{q:"荒天航行時に注意すべきこととして不適切なものはどれか。",
+    choices:[
+      "動揺で荷物が動かないよう固定する。",
+      "多くの荷物を積んでいるときは急旋回を避ける。",
+      "波が高いときは、横波を受けないよう針路を調整する。",
+      "船体の横揺れ周期と波の周期が同調するように針路・速力を調整する。"]},
+  answer:3,
+  hint:{en:"You must AVOID synchronizing the rolling period with the wave period — resonance between the two causes dangerously large rolling and a real risk of capsizing, the opposite of what you want.",
+    jp:"横揺れ周期と波周期を同調させるのはむしろ危険。共振により横揺れが異常に大きくなり転覆の危険が高まるため、避けるべき。"}
 }
 ];
